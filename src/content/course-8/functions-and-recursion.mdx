@@ -1,0 +1,337 @@
+---
+title: "函數與遞迴：程式的樂高積木"
+slug: "functions-and-recursion"
+level: "中級"
+duration: 28
+objectives:
+  - 學會定義和使用函數
+  - 理解參數與回傳值
+  - 掌握遞迴的概念與應用
+tags: ["函數", "遞迴", "模組化"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小林發現自己寫的程式有很多重複的程式碼，每次要計算面積都要寫一遍公式。同事告訴他可以把程式碼包成「函數」，就像製作樂高積木一樣可以重複使用。
+</Why>
+
+<Goals items={[
+"學會定義和使用函數",
+"理解參數與回傳值",
+"掌握遞迴的概念與應用"
+]} />
+
+## 1. 定義基本函數
+
+用 `def` 關鍵字建立函數：
+
+<TryIt
+id="basic-function"
+starter={`# 定義函數
+def greet():
+    print("Hello, World!")
+    print("歡迎學習 Python！")
+
+# 呼叫函數
+greet()
+greet()  # 可以重複使用
+
+print("函數呼叫結束")`}
+enableAiReview
+/>
+
+**重點**：
+- `def` 後面接函數名稱和小括號
+- 函數內的程式碼要縮排
+- 用函數名稱加括號來呼叫
+
+---
+
+## 2. 帶參數的函數
+
+讓函數接收外部資料：
+
+<TryIt
+id="function-parameters"
+starter={`# 單一參數
+def greet_person(name):
+    print(f"Hello, {name}!")
+
+greet_person("Alice")
+greet_person("Bob")
+
+# 多個參數
+def calculate_rectangle_area(length, width):
+    area = length * width
+    print(f"長 {length}，寬 {width} 的矩形面積是 {area}")
+
+calculate_rectangle_area(5, 3)
+calculate_rectangle_area(10, 7)`}
+enableAiReview
+/>
+
+---
+
+## 3. 回傳值
+
+函數可以回傳結果：
+
+<TryIt
+id="return-values"
+starter={`# 回傳單一值
+def add(a, b):
+    return a + b
+
+result = add(3, 5)
+print(f"3 + 5 = {result}")
+
+# 回傳多個值
+def get_name_age():
+    name = "Alice"
+    age = 25
+    return name, age  # 回傳元組
+
+person_name, person_age = get_name_age()
+print(f"姓名: {person_name}, 年齡: {person_age}")
+
+# 條件回傳
+def absolute_value(x):
+    if x >= 0:
+        return x
+    else:
+        return -x
+
+print(absolute_value(-5))  # 5
+print(absolute_value(3))   # 3`}
+enableAiReview
+/>
+
+---
+
+## 4. 預設參數
+
+給參數預設值：
+
+<TryIt
+id="default-parameters"
+starter={`def introduce(name, age=18, city="台北"):
+    print(f"我是 {name}，{age} 歲，來自 {city}")
+
+# 使用預設值
+introduce("Alice")
+
+# 覆蓋部分預設值
+introduce("Bob", 25)
+
+# 覆蓋所有預設值
+introduce("Carol", 30, "高雄")
+
+# 用關鍵字參數（可以不按順序）
+introduce(city="台中", name="David", age=22)`}
+enableAiReview
+/>
+
+---
+
+## 5. 變數範圍 (Scope)
+
+函數內外的變數有不同的「可見範圍」：
+
+<TryIt
+id="variable-scope"
+starter={`# 全域變數
+global_var = "我是全域變數"
+
+def scope_example():
+    # 區域變數
+    local_var = "我是區域變數"
+    print(f"函數內: {global_var}")  # 可以讀取全域變數
+    print(f"函數內: {local_var}")
+
+scope_example()
+print(f"函數外: {global_var}")
+# print(f"函數外: {local_var}")  # 這會出錯！
+
+# 修改全域變數
+count = 0
+
+def increment():
+    global count  # 聲明要修改全域變數
+    count += 1
+    print(f"count = {count}")
+
+increment()
+increment()`}
+enableAiReview
+/>
+
+---
+
+## 6. Lambda 函數
+
+簡短的匿名函數：
+
+<TryIt
+id="lambda-functions"
+starter={`# 普通函數
+def square(x):
+    return x ** 2
+
+# Lambda 函數（匿名函數）
+square_lambda = lambda x: x ** 2
+
+print(square(5))         # 25
+print(square_lambda(5))  # 25
+
+# 常用於排序
+students = [("Alice", 85), ("Bob", 90), ("Carol", 78)]
+
+# 按成績排序
+students.sort(key=lambda student: student[1])
+print("按成績排序:", students)
+
+# 按姓名排序
+students.sort(key=lambda student: student[0])
+print("按姓名排序:", students)`}
+enableAiReview
+/>
+
+---
+
+## 7. 遞迴函數
+
+函數呼叫自己：
+
+<TryIt
+id="recursion-basics"
+starter={`# 計算階乘 n! = n × (n-1) × ... × 1
+def factorial(n):
+    # 基本情況（停止條件）
+    if n <= 1:
+        return 1
+    # 遞迴情況
+    else:
+        return n * factorial(n - 1)
+
+print(f"5! = {factorial(5)}")  # 120
+
+# 費波納契數列
+def fibonacci(n):
+    if n <= 1:
+        return n
+    else:
+        return fibonacci(n - 1) + fibonacci(n - 2)
+
+# 印出前10個費波納契數
+print("費波納契數列:")
+for i in range(10):
+    print(fibonacci(i), end=" ")`}
+enableAiReview
+/>
+
+---
+
+## 8. 實用函數範例
+
+<TryIt
+id="useful-functions"
+starter={`# 檢查是否為質數
+def is_prime(n):
+    if n < 2:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+# 找出範圍內的質數
+def find_primes(start, end):
+    primes = []
+    for num in range(start, end + 1):
+        if is_prime(num):
+            primes.append(num)
+    return primes
+
+primes_1_to_20 = find_primes(1, 20)
+print(f"1到20的質數: {primes_1_to_20}")
+
+# 計算串列統計
+def calculate_stats(numbers):
+    if not numbers:
+        return None
+    
+    total = sum(numbers)
+    average = total / len(numbers)
+    minimum = min(numbers)
+    maximum = max(numbers)
+    
+    return {
+        'total': total,
+        'average': average,
+        'min': minimum,
+        'max': maximum
+    }
+
+scores = [85, 92, 78, 96, 87]
+stats = calculate_stats(scores)
+print(f"成績統計: {stats}")`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "UnboundLocalError: local variable referenced before assignment",
+"why": "在函數內修改全域變數但沒有用 global 宣告",
+"fix": "使用 global 關鍵字或傳入參數後回傳結果"
+},
+{
+"symptom": "遞迴函數執行很慢或當機",
+"why": "沒有適當的停止條件，或遞迴層數太深",
+"fix": "確保有基本情況，考慮用迴圈替代深層遞迴"
+},
+{
+"symptom": "預設參數是可變物件時的奇怪行為",
+"why": "預設參數在函數定義時就建立，會被重複使用",
+"fix": "用 None 作預設值，在函數內建立新物件"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="密碼強度檢查器"
+  description="建立一個密碼強度檢查系統，包含以下函數：
+
+1. `check_length(password)`: 檢查長度≥8，回傳 True/False
+2. `check_uppercase(password)`: 檢查是否有大寫字母
+3. `check_lowercase(password)`: 檢查是否有小寫字母  
+4. `check_digit(password)`: 檢查是否有數字
+5. `check_special(password)`: 檢查是否有特殊字元(!@#$%^&*)
+6. `calculate_strength(password)`: 綜合評分（滿足條件數/5）
+
+輸出格式：
+密碼: [輸入密碼]
+長度檢查: 通過/不通過
+大寫字母: 通過/不通過
+小寫字母: 通過/不通過
+數字: 通過/不通過
+特殊字元: 通過/不通過
+強度評分: X.X/5.0"
+  testCases={[
+    {
+      inputs: ["Password123!"],
+      outputs: ["密碼: Password123!", "長度檢查: 通過", "大寫字母: 通過", "小寫字母: 通過", "數字: 通過", "特殊字元: 通過", "強度評分: 5.0/5.0"]
+    },
+    {
+      inputs: ["weak"],
+      outputs: ["密碼: weak", "長度檢查: 不通過", "大寫字母: 不通過", "小寫字母: 通過", "數字: 不通過", "特殊字元: 不通過", "強度評分: 1.0/5.0"]
+    },
+    {
+      inputs: ["MyPass123"],
+      outputs: ["密碼: MyPass123", "長度檢查: 通過", "大寫字母: 通過", "小寫字母: 通過", "數字: 通過", "特殊字元: 不通過", "強度評分: 4.0/5.0"]
+    }
+  ]}
+/>

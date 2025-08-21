@@ -1,0 +1,314 @@
+---
+title: "串列 (Lists)：收納多個資料的容器"
+slug: "lists"
+level: "中級"
+duration: 25
+objectives:
+  - 理解串列的概念與操作
+  - 掌握串列的增刪改查
+  - 學會串列的進階技巧
+tags: ["資料結構", "串列"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小陳要記錄班上同學的成績，用一個個變數太麻煩了。他需要一個能裝很多資料的「容器」，還要能輕鬆存取和修改。
+</Why>
+
+<Goals items={[
+"理解串列的概念與操作",
+"掌握串列的增刪改查",
+"學會串列的進階技巧"
+]} />
+
+## 1. 建立串列
+
+串列用方括號 `[]` 建立，可以裝不同類型的資料：
+
+<TryIt
+id="create-lists"
+starter={`# 空串列
+empty_list = []
+
+# 數字串列
+scores = [85, 92, 78, 96, 87]
+
+# 字串串列
+fruits = ["apple", "banana", "orange"]
+
+# 混合資料類型
+mixed = ["Alice", 25, True, 3.14]
+
+print(f"成績: {scores}")
+print(f"水果: {fruits}")
+print(f"混合: {mixed}")`}
+enableAiReview
+/>
+
+---
+
+## 2. 存取串列元素
+
+用索引存取元素（從 0 開始）：
+
+<TryIt
+id="access-elements"
+starter={`fruits = ["apple", "banana", "orange", "grape"]
+
+print(fruits[0])    # apple（第一個）
+print(fruits[1])    # banana（第二個）
+print(fruits[-1])   # grape（最後一個）
+print(fruits[-2])   # orange（倒數第二個）
+
+# 串列長度
+print(f"共有 {len(fruits)} 種水果")
+
+# 檢查元素是否存在
+print("apple" in fruits)    # True
+print("kiwi" in fruits)     # False`}
+enableAiReview
+/>
+
+---
+
+## 3. 串列切片
+
+取出串列的一部分：
+
+<TryIt
+id="list-slicing"
+starter={`numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+print(numbers[2:5])    # [2, 3, 4]（索引2到4）
+print(numbers[:3])     # [0, 1, 2]（開頭到索引2）
+print(numbers[7:])     # [7, 8, 9]（索引7到結尾）
+print(numbers[::2])    # [0, 2, 4, 6, 8]（每隔一個）
+print(numbers[::-1])   # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]（反轉）`}
+enableAiReview
+/>
+
+---
+
+## 4. 修改串列元素
+
+串列是可變的（mutable），可以修改內容：
+
+<TryIt
+id="modify-elements"
+starter={`fruits = ["apple", "banana", "orange"]
+print(f"原始: {fruits}")
+
+# 修改單個元素
+fruits[1] = "grape"
+print(f"修改後: {fruits}")
+
+# 修改多個元素
+fruits[0:2] = ["kiwi", "mango"]
+print(f"批量修改: {fruits}")
+
+# 注意：字串不能這樣修改
+# text = "hello"
+# text[0] = "H"  # 這會出錯！`}
+enableAiReview
+/>
+
+---
+
+## 5. 新增元素
+
+有多種方法新增元素：
+
+<TryIt
+id="add-elements"
+starter={`fruits = ["apple", "banana"]
+print(f"原始: {fruits}")
+
+# append：在最後加一個元素
+fruits.append("orange")
+print(f"append 後: {fruits}")
+
+# insert：在指定位置插入
+fruits.insert(1, "grape")  # 在索引1插入
+print(f"insert 後: {fruits}")
+
+# extend：加入多個元素
+fruits.extend(["kiwi", "mango"])
+print(f"extend 後: {fruits}")
+
+# + 運算子：合併串列
+more_fruits = fruits + ["pear", "peach"]
+print(f"合併後: {more_fruits}")`}
+enableAiReview
+/>
+
+---
+
+## 6. 刪除元素
+
+移除不要的元素：
+
+<TryIt
+id="remove-elements"
+starter={`fruits = ["apple", "banana", "orange", "banana", "grape"]
+print(f"原始: {fruits}")
+
+# remove：移除第一個符合的元素
+fruits.remove("banana")  # 只移除第一個banana
+print(f"remove 後: {fruits}")
+
+# pop：移除並回傳指定位置的元素
+popped = fruits.pop(1)   # 移除索引1的元素
+print(f"pop 後: {fruits}")
+print(f"被移除的: {popped}")
+
+# del：刪除指定位置或範圍
+del fruits[0]
+print(f"del 後: {fruits}")
+
+# clear：清空整個串列
+fruits.clear()
+print(f"清空後: {fruits}")`}
+enableAiReview
+/>
+
+---
+
+## 7. 串列的方法
+
+常用的串列方法：
+
+<TryIt
+id="list-methods"
+starter={`numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+print(f"原始: {numbers}")
+
+# 排序
+numbers.sort()  # 原地排序（修改原串列）
+print(f"排序後: {numbers}")
+
+# 反轉
+numbers.reverse()
+print(f"反轉後: {numbers}")
+
+# 計數
+fruits = ["apple", "banana", "apple", "orange", "apple"]
+print(f"apple 出現 {fruits.count('apple')} 次")
+
+# 找位置
+print(f"banana 在索引 {fruits.index('banana')}")`}
+enableAiReview
+/>
+
+---
+
+## 8. 串列推導式 (List Comprehension)
+
+快速建立串列的語法：
+
+<TryIt
+id="list-comprehension"
+starter={`# 基本語法：[表達式 for 變數 in 序列]
+numbers = [1, 2, 3, 4, 5]
+
+# 傳統方法
+squares = []
+for n in numbers:
+    squares.append(n ** 2)
+print(f"傳統方法: {squares}")
+
+# 串列推導式
+squares2 = [n ** 2 for n in numbers]
+print(f"推導式: {squares2}")
+
+# 加上條件
+evens = [n for n in numbers if n % 2 == 0]
+print(f"偶數: {evens}")
+
+# 複雜表達式
+words = ["hello", "world", "python"]
+lengths = [f"{word}({len(word)})" for word in words]
+print(f"長度: {lengths}")`}
+enableAiReview
+/>
+
+---
+
+## 9. 巢狀串列
+
+串列裡面還可以放串列：
+
+<TryIt
+id="nested-lists"
+starter={`# 二維串列（表格）
+matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+print("矩陣:")
+for row in matrix:
+    print(row)
+
+# 存取巢狀元素
+print(f"第2行第3列: {matrix[1][2]}")  # 6
+
+# 修改巢狀元素
+matrix[0][0] = 0
+print(f"修改後第一行: {matrix[0]}")`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "修改串列時索引超出範圍",
+"why": "存取了不存在的索引位置",
+"fix": "使用 len() 檢查串列長度，或用 try-except 處理"
+},
+{
+"symptom": "在迴圈中修改串列導致錯誤",
+"why": "迴圈過程中串列大小改變",
+"fix": "從後往前迭代，或先建立要修改的索引清單"
+},
+{
+"symptom": "複製串列時修改了原串列",
+"why": "= 只是複製參考，不是真的複製",
+"fix": "使用 list.copy() 或 list[:] 建立真的副本"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="學生成績管理系統"
+  description="建立一個成績管理系統，可以：
+
+1. 輸入學生數量
+2. 依序輸入每位學生的姓名和成績
+3. 計算並顯示：
+   - 全班平均分數（小數點後1位）
+   - 最高分學生姓名和分數
+   - 及格學生人數（≥60分）
+   - 按成績排序的學生清單（高到低）
+
+輸出格式：
+平均分數: XX.X
+最高分: [姓名] XX分
+及格人數: X人
+排序結果:
+[姓名] XX分
+..."
+  testCases={[
+    {
+      inputs: ["3", "Alice", "85", "Bob", "72", "Carol", "94"],
+      outputs: ["平均分數: 83.7", "最高分: Carol 94分", "及格人數: 3人", "排序結果:", "Carol 94分", "Alice 85分", "Bob 72分"]
+    },
+    {
+      inputs: ["2", "David", "45", "Eve", "78"],
+      outputs: ["平均分數: 61.5", "最高分: Eve 78分", "及格人數: 1人", "排序結果:", "Eve 78分", "David 45分"]
+    }
+  ]}
+/>

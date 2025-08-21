@@ -1,0 +1,246 @@
+---
+title: "For 迴圈與範圍：重複執行的藝術"
+slug: "for-loops-and-range"
+level: "初級"
+duration: 20
+objectives:
+  - 掌握 for 迴圈的語法與應用
+  - 了解 range() 函數的用法
+  - 學會迴圈中的控制語句
+tags: ["基礎", "迴圈"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小王需要印出 1 到 100 的數字，他寫了 100 行 print()。同事告訴他有更好的方法，只需要 3 行程式碼。
+</Why>
+
+<Goals items={[
+"掌握 for 迴圈的語法與應用",
+"了解 range() 函數的用法",
+"學會迴圈中的控制語句"
+]} />
+
+## 1. 基本的 for 迴圈
+
+用 `for` 重複執行程式碼：
+
+<TryIt
+id="basic-for"
+starter={`# 印出 1 到 5
+for i in range(1, 6):
+    print(i)
+
+print("迴圈結束")`}
+enableAiReview
+/>
+
+**語法解析**：
+- `for i in range(1, 6):`：i 會依序取 1, 2, 3, 4, 5
+- 注意縮排！迴圈內的程式碼要往內縮
+
+---
+
+## 2. range() 函數詳解
+
+`range()` 產生數字序列：
+
+<TryIt
+id="range-examples"
+starter={`# range(停止值) - 從 0 開始
+for i in range(5):
+    print(i)  # 0, 1, 2, 3, 4
+
+print("---")
+
+# range(開始值, 停止值)
+for i in range(2, 7):
+    print(i)  # 2, 3, 4, 5, 6
+
+print("---")
+
+# range(開始值, 停止值, 步長)
+for i in range(0, 10, 2):
+    print(i)  # 0, 2, 4, 6, 8`}
+enableAiReview
+/>
+
+**重點**：停止值不包含在內！
+
+---
+
+## 3. 倒數迴圈
+
+用負數步長倒數：
+
+<TryIt
+id="countdown"
+starter={`# 倒數計時
+for i in range(5, 0, -1):
+    print(f"{i}...")
+
+print("發射！")`}
+enableAiReview
+/>
+
+---
+
+## 4. 迴圈處理字串
+
+可以直接迴圈處理字串中的每個字元：
+
+<TryIt
+id="string-loop"
+starter={`name = "Python"
+
+for char in name:
+    print(f"字母: {char}")
+
+# 也可以用索引
+for i in range(len(name)):
+    print(f"位置 {i}: {name[i]}")`}
+enableAiReview
+/>
+
+---
+
+## 5. 累加與計算
+
+在迴圈中進行累加：
+
+<TryIt
+id="accumulation"
+starter={`# 計算 1 到 10 的總和
+total = 0
+for i in range(1, 11):
+    total += i  # 等於 total = total + i
+    print(f"目前總和: {total}")
+
+print(f"最終結果: {total}")`}
+enableAiReview
+/>
+
+---
+
+## 6. break 和 continue
+
+控制迴圈的執行：
+
+<TryIt
+id="break-continue"
+starter={`# break：跳出整個迴圈
+for i in range(1, 10):
+    if i == 5:
+        print("找到 5，停止迴圈")
+        break
+    print(i)
+
+print("---")
+
+# continue：跳過這一次，繼續下一次
+for i in range(1, 6):
+    if i == 3:
+        print("跳過 3")
+        continue
+    print(i)`}
+enableAiReview
+/>
+
+---
+
+## 7. 巢狀迴圈
+
+迴圈裡面還有迴圈：
+
+<TryIt
+id="nested-loops"
+starter={`# 印出乘法表片段
+for i in range(1, 4):
+    for j in range(1, 4):
+        result = i * j
+        print(f"{i} x {j} = {result}")
+    print("---")  # 分隔線`}
+enableAiReview
+/>
+
+---
+
+## 8. 實用的迴圈模式
+
+<TryIt
+id="useful-patterns"
+starter={`# 模式1：計算平均
+numbers = [85, 92, 78, 96, 87]
+total = 0
+for score in numbers:
+    total += score
+average = total / len(numbers)
+print(f"平均分數: {average}")
+
+print("---")
+
+# 模式2：找最大值
+numbers = [45, 67, 23, 89, 34]
+max_num = numbers[0]
+for num in numbers:
+    if num > max_num:
+        max_num = num
+print(f"最大值: {max_num}")`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "range(1, 5) 只跑到 4",
+"why": "range 的停止值不包含在內",
+"fix": "要跑到 5 就寫 range(1, 6)"
+},
+{
+"symptom": "迴圈變數在迴圈外還能使用",
+"why": "Python 的迴圈變數會保留最後的值",
+"fix": "不要在迴圈外依賴迴圈變數的值"
+},
+{
+"symptom": "巢狀迴圈中 break 只跳出內層迴圈",
+"why": "break 只影響最近的迴圈",
+"fix": "需要跳出外層迴圈時使用 flag 變數或函數"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="數字圖案產生器"
+  description="寫一個程式產生數字三角形圖案。使用者輸入層數 n，程式輸出：
+
+第 1 層：1
+第 2 層：1 2
+第 3 層：1 2 3
+...
+第 n 層：1 2 3 ... n
+
+例如輸入 4，輸出：
+1
+1 2
+1 2 3
+1 2 3 4
+
+每層數字之間用空格分隔。"
+  testCases={[
+    {
+      inputs: ["3"],
+      outputs: ["1", "1 2", "1 2 3"]
+    },
+    {
+      inputs: ["5"],
+      outputs: ["1", "1 2", "1 2 3", "1 2 3 4", "1 2 3 4 5"]
+    },
+    {
+      inputs: ["1"],
+      outputs: ["1"]
+    }
+  ]}
+/>

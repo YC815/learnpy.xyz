@@ -1,0 +1,268 @@
+---
+title: "字串處理：文字魔法師的必備技能"
+slug: "string-processing"
+level: "初級"
+duration: 22
+objectives:
+  - 掌握字串的基本操作方法
+  - 學會字串的分割與合併
+  - 了解字串格式化的技巧
+tags: ["基礎", "字串"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小美在處理使用者輸入的姓名時，發現有些人會輸入多餘的空格，有些會用不同的大小寫。她需要學會如何「清理」和「美化」這些文字。
+</Why>
+
+<Goals items={[
+"掌握字串的基本操作方法",
+"學會字串的分割與合併",
+"了解字串格式化的技巧"
+]} />
+
+## 1. 字串的基本概念
+
+字串是文字的容器，每個字元都有位置（索引）：
+
+<TryIt
+id="string-basics"
+starter={`text = "Hello Python"
+
+print(text[0])     # H（第一個字元）
+print(text[6])     # P
+print(text[-1])    # n（最後一個字元）
+print(len(text))   # 12（字串長度）
+
+# 字串切片
+print(text[0:5])   # Hello
+print(text[6:])    # Python`}
+enableAiReview
+/>
+
+---
+
+## 2. 字串的基本方法
+
+字串有很多內建方法可以使用：
+
+<TryIt
+id="string-methods"
+starter={`name = "  alice SMITH  "
+
+print(name.upper())      # 轉大寫：  ALICE SMITH  
+print(name.lower())      # 轉小寫：  alice smith  
+print(name.strip())      # 去除前後空格：alice SMITH
+print(name.title())      # 首字母大寫：  Alice Smith  
+
+# 組合使用
+clean_name = name.strip().title()
+print(f"清理後: '{clean_name}'")`}
+enableAiReview
+/>
+
+---
+
+## 3. 字串的搜尋與判斷
+
+檢查字串內容：
+
+<TryIt
+id="string-search"
+starter={`email = "user@example.com"
+
+print("@" in email)           # True（包含@符號）
+print(email.startswith("user"))  # True（以user開頭）
+print(email.endswith(".com"))    # True（以.com結尾）
+
+# 搜尋位置
+print(email.find("@"))        # 4（@的位置）
+print(email.find("xyz"))      # -1（沒找到）
+
+# 字串類型判斷
+print("123".isdigit())        # True（全是數字）
+print("abc".isalpha())        # True（全是字母）`}
+enableAiReview
+/>
+
+---
+
+## 4. 字串的分割與合併
+
+把字串拆開或組合：
+
+<TryIt
+id="split-join"
+starter={`# 分割字串
+sentence = "Python is awesome"
+words = sentence.split()     # 用空格分割
+print(words)                 # ['Python', 'is', 'awesome']
+
+# 用其他符號分割
+data = "apple,banana,orange"
+fruits = data.split(",")
+print(fruits)               # ['apple', 'banana', 'orange']
+
+# 合併字串
+result = " ".join(words)    # 用空格連接
+print(result)               # Python is awesome
+
+# 用其他符號連接
+csv = ",".join(fruits)
+print(csv)                  # apple,banana,orange`}
+enableAiReview
+/>
+
+---
+
+## 5. 字串替換
+
+替換字串中的內容：
+
+<TryIt
+id="string-replace"
+starter={`message = "Hello World, World is beautiful"
+
+# 替換所有符合的內容
+new_message = message.replace("World", "Python")
+print(new_message)  # Hello Python, Python is beautiful
+
+# 只替換前 n 個
+limited = message.replace("World", "Python", 1)
+print(limited)      # Hello Python, World is beautiful
+
+# 移除字元（替換成空字串）
+no_spaces = "a b c d".replace(" ", "")
+print(no_spaces)    # abcd`}
+enableAiReview
+/>
+
+---
+
+## 6. 字串格式化
+
+美化輸出的三種方法：
+
+<TryIt
+id="string-formatting"
+starter={`name = "Alice"
+age = 25
+score = 92.5
+
+# 方法1：f-string（推薦）
+print(f"我是 {name}，{age} 歲，分數 {score}")
+
+# 方法2：.format()
+print("我是 {}，{} 歲，分數 {}".format(name, age, score))
+
+# 方法3：% 格式化（較舊）
+print("我是 %s，%d 歲，分數 %.1f" % (name, age, score))
+
+# f-string 的進階用法
+print(f"分數：{score:.1f}%")    # 92.5%（一位小數）
+print(f"姓名：{name:>10}")      # 右對齊，寬度10`}
+enableAiReview
+/>
+
+---
+
+## 7. 多行字串
+
+處理多行文字：
+
+<TryIt
+id="multiline-strings"
+starter={`# 多行字串
+poem = """春眠不覺曉，
+處處聞啼鳥。
+夜來風雨聲，
+花落知多少。"""
+
+print(poem)
+
+# 分行處理
+lines = poem.split("\n")
+for i, line in enumerate(lines, 1):
+    print(f"第{i}行: {line}")`}
+enableAiReview
+/>
+
+---
+
+## 8. 字串與迴圈
+
+遍歷字串中的每個字元：
+
+<TryIt
+id="string-loops"
+starter={`password = "Abc123"
+
+# 檢查密碼強度
+has_upper = False
+has_lower = False
+has_digit = False
+
+for char in password:
+    if char.isupper():
+        has_upper = True
+    elif char.islower():
+        has_lower = True
+    elif char.isdigit():
+        has_digit = True
+
+strong = has_upper and has_lower and has_digit
+print(f"密碼強度: {'強' if strong else '弱'}")`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "字串不能直接修改",
+"why": "Python 的字串是不可變的（immutable）",
+"fix": "要創造新字串：new_str = old_str.replace('a', 'b')"
+},
+{
+"symptom": "split() 產生空字串",
+"why": "連續的分隔符或字串開頭結尾有分隔符",
+"fix": "使用 strip() 先清理，或過濾空字串"
+},
+{
+"symptom": "find() 回傳 -1 但程式當作真",
+"why": "-1 在條件判斷中是 True",
+"fix": "正確用法：if text.find('x') != -1"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="使用者資料清理系統"
+  description="建立一個使用者資料清理系統。輸入格式：「姓名,電子郵件,電話」
+
+處理規則：
+1. 姓名：去除前後空格，轉為適當大小寫（首字母大寫）
+2. 電子郵件：轉為小寫，檢查是否包含 @ 符號
+3. 電話：移除所有空格和破折號
+
+輸出格式：
+姓名: [處理後姓名]
+電子郵件: [處理後郵件] (有效/無效)
+電話: [處理後電話]"
+  testCases={[
+    {
+      inputs: ["  john doe  ,JOHN@GMAIL.COM,09-12 34 56-78"],
+      outputs: ["姓名: John Doe", "電子郵件: john@gmail.com (有效)", "電話: 0912345678"]
+    },
+    {
+      inputs: ["alice wang,alice.wanggmail.com,  0987-654-321  "],
+      outputs: ["姓名: Alice Wang", "電子郵件: alice.wanggmail.com (無效)", "電話: 0987654321"]
+    },
+    {
+      inputs: ["BOB chen,bob@yahoo.com,02 2345 6789"],
+      outputs: ["姓名: Bob Chen", "電子郵件: bob@yahoo.com (有效)", "電話: 0223456789"]
+    }
+  ]}
+/>

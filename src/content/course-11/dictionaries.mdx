@@ -1,0 +1,442 @@
+---
+title: "字典 (Dictionaries)：鍵值對應的資料結構"
+slug: "dictionaries"  
+level: "中級"
+duration: 26
+objectives:
+  - 理解字典的概念與特性
+  - 掌握字典的操作方法
+  - 學會巢狀字典與實務應用
+tags: ["資料結構", "字典", "鍵值對"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小趙要建立學生資料庫，每個學生有姓名、學號、成績等資訊。用串列要記住每個位置代表什麼很麻煩，他需要一種能用「名稱」來存取資料的方式。
+</Why>
+
+<Goals items={[
+"理解字典的概念與特性",
+"掌握字典的操作方法", 
+"學會巢狀字典與實務應用"
+]} />
+
+## 1. 字典基礎概念
+
+字典用大括號 `{}` 建立，儲存鍵值對 (key-value pairs)：
+
+<TryIt
+id="dictionary-basics"
+starter={`# 建立字典
+student = {
+    "name": "Alice",
+    "age": 20,
+    "major": "Computer Science",
+    "gpa": 3.8
+}
+
+print(f"學生資料: {student}")
+print(f"姓名: {student['name']}")
+print(f"年齡: {student['age']}")
+
+# 不同類型的鍵
+mixed_dict = {
+    "text_key": "字串鍵",
+    42: "數字鍵",
+    (1, 2): "元組鍵"
+}
+
+print(f"混合字典: {mixed_dict}")
+print(f"用數字當鍵: {mixed_dict[42]}")
+
+# 字典長度
+print(f"字典有 {len(student)} 個項目")`}
+enableAiReview
+/>
+
+**重點**：
+- 鍵 (key) 必須是不可變的類型
+- 值 (value) 可以是任何類型  
+- 鍵是唯一的，不能重複
+
+---
+
+## 2. 存取與修改字典
+
+<TryIt
+id="access-modify-dict"
+starter={`student = {"name": "Bob", "age": 19, "major": "Math"}
+
+# 存取值
+print(f"姓名: {student['name']}")
+
+# 安全存取（避免 KeyError）
+print(f"GPA: {student.get('gpa', '未設定')}")  # 提供預設值
+print(f"年齡: {student.get('age')}")
+
+# 修改現有的鍵
+student['age'] = 20
+print(f"更新年齡後: {student}")
+
+# 新增鍵值對
+student['gpa'] = 3.5
+student['email'] = 'bob@example.com'
+print(f"新增項目後: {student}")
+
+# 刪除項目
+del student['email']
+print(f"刪除email後: {student}")
+
+# 彈出項目
+popped_age = student.pop('age')
+print(f"彈出的年齡: {popped_age}")
+print(f"彈出後的字典: {student}")`}
+enableAiReview
+/>
+
+---
+
+## 3. 字典的方法
+
+常用的字典方法：
+
+<TryIt
+id="dictionary-methods"
+starter={`grades = {
+    "Math": 85,
+    "English": 92,
+    "Physics": 78,
+    "Chemistry": 88
+}
+
+print(f"成績字典: {grades}")
+
+# 取得所有鍵
+print(f"科目: {list(grades.keys())}")
+
+# 取得所有值
+print(f"分數: {list(grades.values())}")
+
+# 取得所有鍵值對
+print(f"鍵值對: {list(grades.items())}")
+
+# 更新字典
+new_grades = {"Biology": 90, "Math": 87}  # Math 會被覆蓋
+grades.update(new_grades)
+print(f"更新後: {grades}")
+
+# 複製字典
+grades_copy = grades.copy()
+grades_copy["Art"] = 95
+print(f"原字典: {grades}")
+print(f"複製字典: {grades_copy}")
+
+# 清空字典
+grades.clear()
+print(f"清空後: {grades}")`}
+enableAiReview
+/>
+
+---
+
+## 4. 遍歷字典
+
+用迴圈處理字典內容：
+
+<TryIt
+id="iterate-dictionary"
+starter={`student_scores = {
+    "Alice": 85,
+    "Bob": 92,
+    "Carol": 78,
+    "David": 88
+}
+
+print("方法1：只遍歷鍵")
+for name in student_scores:
+    print(f"{name}: {student_scores[name]}")
+
+print("\n方法2：遍歷鍵值對")
+for name, score in student_scores.items():
+    print(f"{name} 得了 {score} 分")
+
+print("\n方法3：只遍歷值")
+total_score = 0
+for score in student_scores.values():
+    total_score += score
+
+average = total_score / len(student_scores)
+print(f"平均分數: {average:.1f}")
+
+print("\n方法4：帶索引的遍歷")
+for i, (name, score) in enumerate(student_scores.items(), 1):
+    print(f"第{i}名: {name} ({score}分)")`}
+enableAiReview
+/>
+
+---
+
+## 5. 字典推導式
+
+快速建立字典：
+
+<TryIt
+id="dictionary-comprehension"
+starter={`# 基本字典推導式
+squares = {x: x**2 for x in range(1, 6)}
+print(f"平方字典: {squares}")
+
+# 從串列建立字典
+names = ["Alice", "Bob", "Carol"]
+name_lengths = {name: len(name) for name in names}
+print(f"姓名長度: {name_lengths}")
+
+# 帶條件的推導式
+numbers = {1: 10, 2: 20, 3: 30, 4: 40, 5: 50}
+even_numbers = {k: v for k, v in numbers.items() if k % 2 == 0}
+print(f"偶數鍵: {even_numbers}")
+
+# 轉換現有字典
+celsius = {"freezing": 0, "room": 20, "body": 37, "boiling": 100}
+fahrenheit = {desc: (temp * 9/5) + 32 for desc, temp in celsius.items()}
+print(f"攝氏: {celsius}")
+print(f"華氏: {fahrenheit}")
+
+# 字串處理
+text = "hello world"
+char_count = {char: text.count(char) for char in set(text) if char != ' '}
+print(f"字元計數: {char_count}")`}
+enableAiReview
+/>
+
+---
+
+## 6. 巢狀字典
+
+字典裡面還可以放字典：
+
+<TryIt
+id="nested-dictionaries"
+starter={`# 學生資料庫
+students = {
+    "S001": {
+        "name": "Alice",
+        "age": 20,
+        "grades": {"Math": 85, "English": 92, "Physics": 78}
+    },
+    "S002": {
+        "name": "Bob", 
+        "age": 19,
+        "grades": {"Math": 90, "English": 87, "Physics": 94}
+    },
+    "S003": {
+        "name": "Carol",
+        "age": 21,
+        "grades": {"Math": 78, "English": 95, "Physics": 82}
+    }
+}
+
+# 存取巢狀資料
+print(f"學生 S001 的姓名: {students['S001']['name']}")
+print(f"學生 S002 的數學成績: {students['S002']['grades']['Math']}")
+
+# 修改巢狀資料
+students['S001']['age'] = 21
+students['S003']['grades']['Chemistry'] = 89
+
+print(f"\n完整學生資料:")
+for student_id, info in students.items():
+    print(f"學號 {student_id}:")
+    print(f"  姓名: {info['name']}")
+    print(f"  年齡: {info['age']}")
+    print(f"  成績: {info['grades']}")
+    
+    # 計算平均分數
+    average = sum(info['grades'].values()) / len(info['grades'])
+    print(f"  平均: {average:.1f}")
+    print()`}
+enableAiReview
+/>
+
+---
+
+## 7. 實用應用範例
+
+<TryIt
+id="practical-applications"
+starter={`# 範例1：詞頻統計
+def count_words(text):
+    words = text.lower().split()
+    word_count = {}
+    
+    for word in words:
+        # 清理標點符號
+        word = word.strip('.,!?;:"')
+        if word:
+            word_count[word] = word_count.get(word, 0) + 1
+    
+    return word_count
+
+text = "Python is great. Python is powerful. Programming with Python is fun."
+word_freq = count_words(text)
+print("詞頻統計:")
+for word, count in sorted(word_freq.items(), key=lambda x: x[1], reverse=True):
+    print(f"{word}: {count}")
+
+print("\n" + "="*50 + "\n")
+
+# 範例2：購物車系統
+class ShoppingCart:
+    def __init__(self):
+        self.items = {}  # {商品名稱: [價格, 數量]}
+    
+    def add_item(self, name, price, quantity=1):
+        if name in self.items:
+            self.items[name][1] += quantity
+        else:
+            self.items[name] = [price, quantity]
+    
+    def remove_item(self, name):
+        if name in self.items:
+            del self.items[name]
+    
+    def update_quantity(self, name, quantity):
+        if name in self.items:
+            self.items[name][1] = quantity
+    
+    def get_total(self):
+        total = 0
+        for price, quantity in self.items.values():
+            total += price * quantity
+        return total
+    
+    def display_cart(self):
+        print("購物車內容:")
+        for name, (price, quantity) in self.items.items():
+            subtotal = price * quantity
+            print(f"{name}: ${price} x {quantity} = ${subtotal}")
+        print(f"總計: ${self.get_total()}")
+
+# 測試購物車
+cart = ShoppingCart()
+cart.add_item("蘋果", 30, 3)
+cart.add_item("香蕉", 20, 2)
+cart.add_item("橘子", 25, 1)
+cart.add_item("蘋果", 30, 2)  # 增加數量
+
+cart.display_cart()
+
+print("\n更新香蕉數量為5:")
+cart.update_quantity("香蕉", 5)
+cart.display_cart()`}
+enableAiReview
+/>
+
+---
+
+## 8. 字典與 JSON
+
+字典常用於處理 JSON 資料：
+
+<TryIt
+id="dictionary-json"
+starter={`import json
+
+# 字典轉 JSON
+person = {
+    "name": "Alice",
+    "age": 25,
+    "skills": ["Python", "JavaScript", "SQL"],
+    "is_student": True,
+    "address": {
+        "city": "台北",
+        "district": "信義區"
+    }
+}
+
+# 轉成 JSON 字串
+json_string = json.dumps(person, ensure_ascii=False, indent=2)
+print("JSON 格式:")
+print(json_string)
+
+print("\n" + "="*30 + "\n")
+
+# JSON 轉字典
+json_data = '''
+{
+    "users": [
+        {"id": 1, "name": "Alice", "role": "admin"},
+        {"id": 2, "name": "Bob", "role": "user"}
+    ],
+    "total": 2
+}
+'''
+
+data = json.loads(json_data)
+print("解析 JSON:")
+print(f"總使用者數: {data['total']}")
+print("使用者清單:")
+for user in data['users']:
+    print(f"  ID: {user['id']}, 姓名: {user['name']}, 角色: {user['role']}")
+
+# 存取深層資料
+admin_name = data['users'][0]['name']
+print(f"\n管理員姓名: {admin_name}")`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "KeyError: 'key_name'",
+"why": "存取不存在的鍵",
+"fix": "使用 get() 方法或先檢查鍵是否存在：if 'key' in dict"
+},
+{
+"symptom": "TypeError: unhashable type",
+"why": "用可變物件（如串列）當作字典的鍵",
+"fix": "鍵必須是不可變的：字串、數字、元組等"
+},
+{
+"symptom": "字典在迴圈中修改導致錯誤",
+"why": "迴圈過程中改變字典大小",
+"fix": "先建立要修改的鍵清單，或使用 dict.copy() 遍歷副本"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="學生成績管理系統進階版"
+  description="建立完整的學生成績管理系統：
+
+功能需求：
+1. 輸入學生數量
+2. 每個學生輸入：姓名、學號、3科成績（數學、英文、物理）
+3. 系統分析並輸出：
+   - 每位學生的平均分數和等第（A≥90, B≥80, C≥70, D≥60, F<60）
+   - 各科平均分數
+   - 最高總分學生
+   - 各科最高分學生
+
+輸出格式：
+學生成績:
+[姓名] ([學號]): 平均 XX.X (等第X)
+
+各科平均:
+數學: XX.X, 英文: XX.X, 物理: XX.X
+
+最高總分: [姓名] XXX分
+各科最高:
+數學: [姓名] XX分
+英文: [姓名] XX分  
+物理: [姓名] XX分"
+  testCases={[
+    {
+      inputs: ["2", "Alice", "S001", "85", "92", "78", "Bob", "S002", "90", "87", "94"],
+      outputs: ["學生成績:", "Alice (S001): 平均 85.0 (等第B)", "Bob (S002): 平均 90.3 (等第A)", "各科平均:", "數學: 87.5, 英文: 89.5, 物理: 86.0", "最高總分: Bob 271分", "各科最高:", "數學: Bob 90分", "英文: Alice 92分", "物理: Bob 94分"]
+    }
+  ]}
+/>

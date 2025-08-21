@@ -1,0 +1,158 @@
+---
+title: "Python 資料型別與輸出：讓電腦開口說話"
+slug: "python-data-types-and-print"
+level: "初級"
+duration: 19
+objectives:
+  - 了解Python中的資料型別
+  - 懂的使用print()
+tags: ["基礎"]
+updatedAt: "2025-08-14"
+---
+<Why>
+剛學 Python 的小明想讓電腦幫他算數，卻得到奇怪的結果。原來，他還不知道資料型別與輸出的秘密。
+</Why>
+<Goals items={[
+"了解Python中的資料型別",
+"懂的使用print()"
+]} />
+## 1. 什麼是資料型別？
+
+在 Python 中，每個值都有「型別」，決定了它能做什麼事。
+常見型別：
+
+* **整數（`int`）**：沒有小數點的數字
+* **浮點數（`float`）**：有小數點的數字
+* **字串（`str`）**：用引號包起來的文字
+
+<TryIt
+id="data-types"
+starter={`age = 18       # int
+pi = 3.14      # float
+name = "Amy"   # str
+
+print(age)
+print(pi)
+print(name)`}
+enableAiReview
+/>
+
+---
+
+## 2. 用 `print()` 讓電腦說話
+
+`print()` 可以把資料輸出到螢幕上。
+
+<TryIt
+id="print-example"
+starter={`print("Hello, World!")
+print(2025)
+print(3.14)`}
+enableAiReview
+/>
+
+你也可以一次輸出多個值，用逗號隔開：
+
+<TryIt
+id="print-multiple"
+starter={`print("今天是", 2025, "年")`}
+enableAiReview
+/>
+
+---
+
+## 3. 用 `input()` 讓使用者輸入資料
+
+`input()` 會等使用者輸入一行文字，然後把它存成字串（`str`）。
+
+<TryIt
+id="input-example"
+starter={`name = input("請輸入你的名字：")
+print("你好，", name)`}
+enableAiReview
+/>
+
+---
+
+## 4. 為什麼輸入數字會變成字串？
+
+因為 `input()` **不管輸入什麼都會是字串**。
+字串的「加法」會把它們接在一起（串接），而不是數值相加。
+
+<TryIt
+id="string-add"
+starter={`a = input("輸入第一個數字：")  # 例如 5
+b = input("輸入第二個數字：")  # 例如 7
+print(a + b)  # 會輸出 57`}
+enableAiReview
+/>
+
+---
+
+## 5. 檢查型別
+
+用 `type()` 看變數是什麼型別。
+
+<TryIt
+id="type-check"
+starter={`print(type(18))       # <class 'int'>
+print(type(3.14))     # <class 'float'>
+print(type("Amy"))    # <class 'str'>`}
+enableAiReview
+/>
+
+---
+
+## 6. 轉換型別（讓數字真的相加）
+
+* `int()`：轉成整數
+* `float()`：轉成浮點數
+* `str()`：轉成字串
+
+<TryIt
+id="type-conversion"
+starter={`a = int(input("輸入第一個數字："))
+b = int(input("輸入第二個數字："))
+print(a + b)  # 這次會正確輸出 12`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "輸入 5 和 7，結果輸出 57 而不是 12",
+"why": "因為 input() 回傳的是字串，字串加法是串接，而不是數值相加",
+"fix": "用 int() 或 float() 先轉換成數字"
+},
+{
+"symptom": "ValueError: invalid literal for int()",
+"why": "轉成整數時，輸入的內容不是有效的數字",
+"fix": "檢查輸入內容，或改用 float() 處理小數"
+}
+]} />
+## Boss 挑戰
+
+<Boss
+  title="標價標籤打印機"
+  description="店員正在使用打印系統，店員會輸入 A - 品名、 B - 成本 兩個項目。
+預計售價會是 成本 + NT$10，請協助打印出 `品名 NT$ 售價` 這樣的標籤格式。
+可以參考測試案例來確認正確格式。
+"
+  testCases={[
+    {
+      inputs: ["鉛筆", "3"],
+      outputs: ["鉛筆 NT$ 13"]
+    },
+    {
+      inputs: ["橡皮擦", "1"],
+      outputs: ["橡皮擦 NT$ 11"]
+    },
+    {
+      inputs: ["筆記本", "8"],
+      outputs: ["筆記本 NT$ 18"]
+    }
+  ]}
+/>

@@ -1,0 +1,183 @@
+---
+title: "整數與浮點數：數字的精準與彈性"
+slug: "integers-and-floats"
+level: "初級"
+duration: 15
+objectives:
+  - 了解整數和浮點數的差別
+  - 掌握數字運算和轉換
+tags: ["基礎", "數字"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小華在計算分數時，發現 7/2 的結果是 3.5 而不是 3，但有時候又希望得到整數結果。原來，Python 中的數字有不同的「個性」。
+</Why>
+
+<Goals items={[
+"了解整數和浮點數的差別",
+"掌握數字運算和轉換"
+]} />
+
+## 1. 整數（int）vs 浮點數（float）
+
+**整數**：沒有小數點的數字，用來計數或表示完整的量
+**浮點數**：有小數點的數字，用來表示更精確的值
+
+<TryIt
+id="int-vs-float"
+starter={`# 整數
+age = 18
+count = 100
+
+# 浮點數  
+temperature = 36.5
+pi = 3.14159
+
+print(type(age))         # <class 'int'>
+print(type(temperature)) # <class 'float'>`}
+enableAiReview
+/>
+
+---
+
+## 2. 數字運算
+
+Python 支援基本的數學運算：
+
+<TryIt
+id="basic-operations"
+starter={`a = 10
+b = 3
+
+print(a + b)   # 加法：13
+print(a - b)   # 減法：7
+print(a * b)   # 乘法：30
+print(a / b)   # 除法：3.3333333333333335
+print(a // b)  # 整數除法：3
+print(a % b)   # 餘數：1
+print(a ** b)  # 次方：1000`}
+enableAiReview
+/>
+
+---
+
+## 3. 除法的兩種結果
+
+* `/`：一般除法，結果一定是浮點數
+* `//`：整數除法，結果是整數（向下取整）
+
+<TryIt
+id="division-types"
+starter={`print(10 / 3)   # 3.3333333333333335
+print(10 // 3)  # 3
+
+print(15 / 5)   # 3.0 (還是浮點數！)
+print(15 // 5)  # 3 (整數)`}
+enableAiReview
+/>
+
+---
+
+## 4. 浮點數的精度問題
+
+電腦儲存浮點數時可能會有微小的誤差：
+
+<TryIt
+id="float-precision"
+starter={`print(0.1 + 0.2)  # 0.30000000000000004
+
+# 比較浮點數時要小心
+result = 0.1 + 0.2
+print(result == 0.3)  # False
+
+# 正確的比較方式
+print(abs(result - 0.3) < 0.0001)  # True`}
+enableAiReview
+/>
+
+---
+
+## 5. 型別轉換
+
+在整數和浮點數之間轉換：
+
+<TryIt
+id="number-conversion"
+starter={`# 浮點數轉整數（捨去小數）
+print(int(3.7))    # 3
+print(int(3.99))   # 3
+
+# 整數轉浮點數
+print(float(5))    # 5.0
+
+# 字串轉數字
+print(int("42"))   # 42
+print(float("3.14"))  # 3.14`}
+enableAiReview
+/>
+
+---
+
+## 6. 四捨五入
+
+使用 `round()` 函數：
+
+<TryIt
+id="rounding"
+starter={`print(round(3.14159))     # 3
+print(round(3.14159, 2))  # 3.14 (保留2位小數)
+print(round(3.7))         # 4`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "0.1 + 0.2 不等於 0.3",
+"why": "浮點數在電腦中的儲存方式造成精度誤差",
+"fix": "比較浮點數時使用 abs(a - b) < 很小的數"
+},
+{
+"symptom": "int(3.99) 結果是 3 而不是 4",
+"why": "int() 是直接捨去小數部分，不是四捨五入",
+"fix": "要四捨五入請使用 round()"
+},
+{
+"symptom": "15 / 5 結果是 3.0 而不是 3",
+"why": "/ 運算子一定回傳浮點數",
+"fix": "要整數結果請使用 // 或 int(15 / 5)"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="成績計算機"
+  description="老師需要一個成績計算系統。系統會輸入三科成績（可能有小數），然後：
+1. 計算平均分數（保留到小數點後1位）
+2. 顯示最高分和最低分（整數部分）
+3. 判斷是否及格（平均≥60）
+
+輸出格式：
+平均: X.X
+最高: X (整數部分)
+最低: X (整數部分)
+結果: 及格/不及格"
+  testCases={[
+    {
+      inputs: ["85.5", "92.3", "78.7"],
+      outputs: ["平均: 85.5", "最高: 92", "最低: 78", "結果: 及格"]
+    },
+    {
+      inputs: ["45.2", "58.8", "52.1"],
+      outputs: ["平均: 52.0", "最高: 58", "最低: 45", "結果: 不及格"]
+    },
+    {
+      inputs: ["100", "95.5", "88.3"],
+      outputs: ["平均: 94.6", "最高: 100", "最低: 88", "結果: 及格"]
+    }
+  ]}
+/>

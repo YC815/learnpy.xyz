@@ -1,0 +1,364 @@
+---
+title: "集合 (Sets)：不重複資料的管理"
+slug: "sets"
+level: "中級"
+duration: 20
+objectives:
+  - 理解集合的特性與應用
+  - 掌握集合的基本操作
+  - 學會集合運算與實務應用
+tags: ["資料結構", "集合", "去重"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小劉在處理使用者問卷時，發現很多重複的答案需要過濾。他還想知道不同群組之間有哪些共同喜好，哪些是獨特的偏好。串列處理起來很麻煩，他需要更好的工具。
+</Why>
+
+<Goals items={[
+"理解集合的特性與應用",
+"掌握集合的基本操作",
+"學會集合運算與實務應用"
+]} />
+
+## 1. 集合的基本概念
+
+集合 (Set) 是不重複元素的容器：
+
+<TryIt
+id="set-basics"
+starter={`# 建立集合
+fruits = {"apple", "banana", "orange"}
+print(f"水果集合: {fruits}")
+
+# 從串列建立集合（自動去重）
+numbers_list = [1, 2, 2, 3, 3, 3, 4, 5]
+numbers_set = set(numbers_list)
+print(f"原始串列: {numbers_list}")
+print(f"轉成集合: {numbers_set}")
+
+# 空集合
+empty_set = set()  # 注意：不能用 {} （那是空字典）
+print(f"空集合: {empty_set}")
+
+# 集合大小
+print(f"水果集合有 {len(fruits)} 個元素")`}
+enableAiReview
+/>
+
+**重點**：
+- 集合自動去除重複元素
+- 集合是無序的（沒有索引）
+- 元素必須是不可變的類型
+
+---
+
+## 2. 新增與刪除元素
+
+<TryIt
+id="add-remove-elements"
+starter={`colors = {"red", "green", "blue"}
+print(f"原始: {colors}")
+
+# 新增單一元素
+colors.add("yellow")
+print(f"add 後: {colors}")
+
+# 新增多個元素
+colors.update(["purple", "orange"])
+print(f"update 後: {colors}")
+
+# 刪除元素
+colors.remove("red")  # 如果元素不存在會出錯
+print(f"remove 後: {colors}")
+
+# 安全刪除（不存在也不會出錯）
+colors.discard("pink")  # pink 不存在，但不會出錯
+print(f"discard 後: {colors}")
+
+# 隨機彈出一個元素
+popped = colors.pop()
+print(f"彈出的元素: {popped}")
+print(f"pop 後: {colors}")
+
+# 清空集合
+colors.clear()
+print(f"清空後: {colors}")`}
+enableAiReview
+/>
+
+---
+
+## 3. 集合成員檢查
+
+檢查元素是否存在（非常快）：
+
+<TryIt
+id="membership-test"
+starter={`# 大量資料的成員檢查
+import time
+
+# 準備測試資料
+big_list = list(range(10000))
+big_set = set(range(10000))
+
+target = 9999
+
+# 測試串列檢查速度
+start = time.time()
+result1 = target in big_list
+end = time.time()
+list_time = end - start
+
+# 測試集合檢查速度  
+start = time.time()
+result2 = target in big_set
+end = time.time()
+set_time = end - start
+
+print(f"串列檢查: {result1}, 耗時: {list_time:.6f} 秒")
+print(f"集合檢查: {result2}, 耗時: {set_time:.6f} 秒")
+print(f"集合比串列快 {list_time/set_time:.0f} 倍")
+
+# 基本成員檢查
+fruits = {"apple", "banana", "orange"}
+print(f"\napple 在集合中: {'apple' in fruits}")
+print(f"grape 在集合中: {'grape' in fruits}")`}
+enableAiReview
+/>
+
+---
+
+## 4. 集合運算
+
+數學上的集合運算：
+
+<TryIt
+id="set-operations"
+starter={`# 兩個群組的喜好
+group_a = {"籃球", "足球", "游泳", "跑步"}
+group_b = {"足球", "網球", "游泳", "騎車"}
+
+print(f"A組喜好: {group_a}")
+print(f"B組喜好: {group_b}")
+
+# 聯集（兩組的所有喜好）
+union = group_a | group_b
+print(f"聯集 (A ∪ B): {union}")
+
+# 交集（共同喜好）
+intersection = group_a & group_b
+print(f"交集 (A ∩ B): {intersection}")
+
+# 差集（A有但B沒有）
+difference = group_a - group_b
+print(f"差集 (A - B): {difference}")
+
+# 對稱差集（只屬於其中一組）
+symmetric_diff = group_a ^ group_b
+print(f"對稱差集 (A △ B): {symmetric_diff}")
+
+# 用方法也可以
+print(f"\n用方法:")
+print(f"聯集: {group_a.union(group_b)}")
+print(f"交集: {group_a.intersection(group_b)}")
+print(f"差集: {group_a.difference(group_b)}")`}
+enableAiReview
+/>
+
+---
+
+## 5. 子集合與超集合
+
+檢查包含關係：
+
+<TryIt
+id="subset-superset"
+starter={`# 不同技能等級
+beginner_skills = {"HTML", "CSS"}
+intermediate_skills = {"HTML", "CSS", "JavaScript", "Python"}
+advanced_skills = {"HTML", "CSS", "JavaScript", "Python", "React", "Django"}
+
+print(f"初級: {beginner_skills}")
+print(f"中級: {intermediate_skills}")
+print(f"高級: {advanced_skills}")
+
+# 檢查子集合關係
+print(f"\n初級是中級的子集: {beginner_skills <= intermediate_skills}")
+print(f"中級是高級的子集: {intermediate_skills <= advanced_skills}")
+print(f"初級是高級的子集: {beginner_skills <= advanced_skills}")
+
+# 檢查超集合關係
+print(f"\n高級是中級的超集: {advanced_skills >= intermediate_skills}")
+
+# 真子集（不相等的子集）
+print(f"初級是中級的真子集: {beginner_skills < intermediate_skills}")
+print(f"初級等於初級: {beginner_skills == beginner_skills}")
+
+# 檢查是否無交集
+mobile_skills = {"Swift", "Kotlin", "Flutter"}
+print(f"網頁技能與行動技能無交集: {intermediate_skills.isdisjoint(mobile_skills)}")`}
+enableAiReview
+/>
+
+---
+
+## 6. 集合推導式
+
+快速建立集合：
+
+<TryIt
+id="set-comprehension"
+starter={`# 基本集合推導式
+squares = {x**2 for x in range(1, 6)}
+print(f"平方數: {squares}")
+
+# 從字串去重
+text = "hello world"
+unique_chars = {char for char in text if char != ' '}
+print(f"唯一字元: {unique_chars}")
+
+# 條件過濾
+numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+even_squares = {x**2 for x in numbers if x % 2 == 0}
+print(f"偶數的平方: {even_squares}")
+
+# 字串處理
+words = ["Hello", "WORLD", "Python", "PROGRAMMING"]
+lowercase_words = {word.lower() for word in words}
+print(f"轉小寫: {lowercase_words}")
+
+# 從多個來源建立
+list1 = [1, 2, 3, 4]
+list2 = [3, 4, 5, 6]
+combined = {x for lst in [list1, list2] for x in lst}
+print(f"合併去重: {combined}")`}
+enableAiReview
+/>
+
+---
+
+## 7. 實際應用範例
+
+<TryIt
+id="practical-applications"
+starter={`# 範例1：文字分析
+def analyze_text(text1, text2):
+    words1 = set(text1.lower().split())
+    words2 = set(text2.lower().split())
+    
+    common_words = words1 & words2
+    unique_to_1 = words1 - words2
+    unique_to_2 = words2 - words1
+    
+    return {
+        'common': common_words,
+        'unique_to_1': unique_to_1,
+        'unique_to_2': unique_to_2,
+        'all_words': words1 | words2
+    }
+
+text_a = "Python is a great programming language"
+text_b = "Java is a powerful programming tool"
+
+result = analyze_text(text_a, text_b)
+print("文字分析結果:")
+print(f"共同詞彙: {result['common']}")
+print(f"文字A獨有: {result['unique_to_1']}")
+print(f"文字B獨有: {result['unique_to_2']}")
+
+print("\n" + "="*50 + "\n")
+
+# 範例2：使用者標籤系統
+class UserTags:
+    def __init__(self):
+        self.user_tags = {}
+    
+    def add_user_tags(self, user, tags):
+        if user not in self.user_tags:
+            self.user_tags[user] = set()
+        self.user_tags[user].update(tags)
+    
+    def get_common_interests(self, user1, user2):
+        return self.user_tags.get(user1, set()) & self.user_tags.get(user2, set())
+    
+    def recommend_friends(self, user, min_common_tags=2):
+        user_tags = self.user_tags.get(user, set())
+        recommendations = []
+        
+        for other_user, other_tags in self.user_tags.items():
+            if other_user != user:
+                common = len(user_tags & other_tags)
+                if common >= min_common_tags:
+                    recommendations.append((other_user, common))
+        
+        return sorted(recommendations, key=lambda x: x[1], reverse=True)
+
+# 測試標籤系統
+tag_system = UserTags()
+tag_system.add_user_tags("Alice", ["音樂", "電影", "旅行", "攝影"])
+tag_system.add_user_tags("Bob", ["音樂", "運動", "遊戲", "程式"])
+tag_system.add_user_tags("Carol", ["電影", "旅行", "閱讀", "攝影"])
+
+print("標籤系統測試:")
+common = tag_system.get_common_interests("Alice", "Carol")
+print(f"Alice 和 Carol 的共同興趣: {common}")
+
+recommendations = tag_system.recommend_friends("Alice")
+print(f"推薦給 Alice 的朋友: {recommendations}")`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "TypeError: unhashable type: 'list'",
+"why": "嘗試把可變物件（如串列）放入集合",
+"fix": "集合元素必須是不可變的，如數字、字串、元組"
+},
+{
+"symptom": "集合的元素順序每次都不同",
+"why": "集合是無序的，不保證元素順序",
+"fix": "需要順序時使用 sorted() 或轉為串列"
+},
+{
+"symptom": "remove() 方法導致 KeyError",
+"why": "要刪除的元素不存在於集合中",
+"fix": "使用 discard() 方法，或先檢查元素是否存在"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="課程選課衝突檢查系統"
+  description="設計一個選課系統，檢查課程時間衝突：
+
+功能需求：
+1. 輸入學生數量
+2. 每個學生輸入姓名和已選課程代碼（空格分隔）
+3. 分析並輸出：
+   - 最受歡迎的課程（最多人選）
+   - 每個學生獨有的課程（沒有其他人選的）
+   - 所有學生都選的課程（交集）
+   - 課程總數
+
+輸出格式：
+最受歡迎課程: [課程代碼] (X人選修)
+獨有課程:
+[學生]: {課程}
+共同課程: {課程}
+課程總數: X"
+  testCases={[
+    {
+      inputs: ["3", "Alice", "MATH101 ENG102 PHYS201", "Bob", "MATH101 CS101 ENG102", "Carol", "ENG102 PHYS201 ART301"],
+      outputs: ["最受歡迎課程: ENG102 (3人選修)", "獨有課程:", "Alice: {'PHYS201'}", "Bob: {'CS101'}", "Carol: {'ART301'}", "共同課程: {'ENG102'}", "課程總數: 5"]
+    },
+    {
+      inputs: ["2", "David", "MATH101 PHYS201", "Eve", "CS101 ENG102"],
+      outputs: ["最受歡迎課程: MATH101 (1人選修)", "獨有課程:", "David: {'MATH101', 'PHYS201'}", "Eve: {'CS101', 'ENG102'}", "共同課程: set()", "課程總數: 4"]
+    }
+  ]}
+/>

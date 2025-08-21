@@ -1,0 +1,258 @@
+---
+title: "While 迴圈：當條件成立時繼續執行"
+slug: "while-loops"
+level: "初中級"
+duration: 17
+objectives:
+  - 理解 while 迴圈的運作原理
+  - 避免無窮迴圈的陷阱
+  - 掌握迴圈控制技巧
+tags: ["迴圈", "邏輯"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小張想寫一個猜數字遊戲，但不知道使用者要猜幾次才會猜中。用 for 迴圈很難處理這種「不知道要重複幾次」的情況。
+</Why>
+
+<Goals items={[
+"理解 while 迴圈的運作原理",
+"避免無窮迴圈的陷阱",
+"掌握迴圈控制技巧"
+]} />
+
+## 1. While 迴圈基礎
+
+當條件為 True 時就持續執行：
+
+<TryIt
+id="basic-while"
+starter={`count = 1
+
+while count <= 5:
+    print(f"第 {count} 次")
+    count += 1  # 重要！一定要更新條件
+
+print("迴圈結束")`}
+enableAiReview
+/>
+
+**重點**：一定要在迴圈內更新控制變數，否則會變成無窮迴圈！
+
+---
+
+## 2. 與 for 迴圈的差別
+
+選擇適合的迴圈類型：
+
+<TryIt
+id="while-vs-for"
+starter={`# for 迴圈：知道要重複幾次
+print("用 for 迴圈：")
+for i in range(3):
+    print(f"Hello {i}")
+
+print("\n用 while 迴圈：")
+# while 迴圈：根據條件決定
+i = 0
+while i < 3:
+    print(f"Hello {i}")
+    i += 1`}
+enableAiReview
+/>
+
+**使用時機**：
+- **for**：知道重複次數
+- **while**：根據條件決定何時停止
+
+---
+
+## 3. 使用者輸入驗證
+
+典型的 while 迴圈應用：
+
+<TryIt
+id="input-validation"
+starter={`# 持續要求使用者輸入，直到輸入正確
+age = 0
+while age <= 0 or age > 120:
+    age_input = input("請輸入你的年齡 (1-120): ")
+    
+    if age_input.isdigit():
+        age = int(age_input)
+        if age <= 0 or age > 120:
+            print("年齡必須在 1-120 之間")
+    else:
+        print("請輸入數字")
+
+print(f"你的年齡是 {age} 歲")`}
+enableAiReview
+/>
+
+---
+
+## 4. 猜數字遊戲
+
+實際應用範例：
+
+<TryIt
+id="guessing-game"
+starter={`import random
+
+secret = random.randint(1, 10)
+guess = 0
+attempts = 0
+
+print("我想了一個 1-10 的數字，來猜猜看！")
+
+while guess != secret:
+    guess_input = input("你的猜測: ")
+    
+    if guess_input.isdigit():
+        guess = int(guess_input)
+        attempts += 1
+        
+        if guess < secret:
+            print("太小了！")
+        elif guess > secret:
+            print("太大了！")
+        else:
+            print(f"恭喜！你猜了 {attempts} 次")
+    else:
+        print("請輸入數字")`}
+enableAiReview
+/>
+
+---
+
+## 5. 迴圈控制：break 和 continue
+
+<TryIt
+id="loop-control"
+starter={`# break：立即跳出迴圈
+count = 1
+while True:  # 無窮迴圈
+    print(count)
+    if count == 3:
+        print("停止！")
+        break
+    count += 1
+
+print("---")
+
+# continue：跳過這一次，繼續下一次
+count = 0
+while count < 5:
+    count += 1
+    if count == 3:
+        continue  # 跳過印出 3
+    print(count)`}
+enableAiReview
+/>
+
+---
+
+## 6. 計數器模式
+
+常見的 while 迴圈模式：
+
+<TryIt
+id="counter-patterns"
+starter={`# 模式1：累加
+total = 0
+num = 1
+while num <= 10:
+    total += num
+    num += 1
+print(f"1到10的和: {total}")
+
+print("---")
+
+# 模式2：倒數
+countdown = 5
+while countdown > 0:
+    print(f"{countdown}...")
+    countdown -= 1
+print("時間到！")`}
+enableAiReview
+/>
+
+---
+
+## 7. 避免無窮迴圈
+
+檢查迴圈是否會結束：
+
+<TryIt
+id="infinite-loop-prevention"
+starter={`# 危險：無窮迴圈（別執行這個）
+# count = 1
+# while count <= 5:
+#     print(count)  # 忘記更新 count，永遠不會停止
+
+# 安全：正確的寫法
+count = 1
+max_iterations = 100  # 安全網
+iterations = 0
+
+while count <= 5 and iterations < max_iterations:
+    print(count)
+    count += 1
+    iterations += 1
+
+if iterations >= max_iterations:
+    print("達到最大迭代次數")`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "程式一直執行不停",
+"why": "忘記在迴圈內更新控制變數，造成無窮迴圈",
+"fix": "確保迴圈內有改變條件的程式碼"
+},
+{
+"symptom": "迴圈執行次數不如預期",
+"why": "邊界條件設定錯誤（< vs <=）",
+"fix": "仔細檢查條件判斷，測試邊界情況"
+},
+{
+"symptom": "變數在迴圈外無法使用",
+"why": "變數在迴圈內才定義",
+"fix": "在迴圈前先初始化變數"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="自動提款機模擬器"
+  description="建立一個 ATM 模擬器，初始餘額 1000 元。
+
+功能選單：
+1. 查詢餘額
+2. 提款
+3. 存款  
+4. 退出
+
+規則：
+- 提款不能超過餘額
+- 提款/存款金額必須是正數
+- 無效選擇要重新選擇
+- 選擇4或餘額為0時結束
+
+每次操作後顯示「按 Enter 繼續...」並等待使用者按鍵。"
+  testCases={[
+    {
+      inputs: ["1", "", "2", "500", "", "1", "", "4"],
+      outputs: ["選擇功能: 1", "目前餘額: 1000 元", "按 Enter 繼續...", "選擇功能: 2", "提款金額: 500", "提款成功！", "按 Enter 繼續...", "選擇功能: 1", "目前餘額: 500 元", "按 Enter 繼續...", "謝謝使用！"]
+    },
+    {
+      inputs: ["2", "1500", "2", "800", "", "4"],
+      outputs: ["選擇功能: 2", "提款金額: 1500", "餘額不足！", "選擇功能: 2", "提款金額: 800", "提款成功！", "按 Enter 繼續...", "謝謝使用！"]
+    }
+  ]}
+/>

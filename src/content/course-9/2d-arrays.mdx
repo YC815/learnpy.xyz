@@ -1,0 +1,385 @@
+---
+title: "二維串列 (陣列)：表格資料的處理"
+slug: "2d-arrays"
+level: "中高級"
+duration: 24
+objectives:
+  - 理解二維串列的概念與建立
+  - 掌握二維資料的存取與操作
+  - 學會處理矩陣運算
+tags: ["資料結構", "矩陣", "進階"]
+updatedAt: "2025-08-21"
+---
+<Why>
+小王要處理學生的多科成績，每個學生有多門課程的分數。一維串列不夠用了，他需要學會使用「表格」來組織資料。
+</Why>
+
+<Goals items={[
+"理解二維串列的概念與建立",
+"掌握二維資料的存取與操作", 
+"學會處理矩陣運算"
+]} />
+
+## 1. 建立二維串列
+
+二維串列就像表格，有行（row）和列（column）：
+
+<TryIt
+id="create-2d-arrays"
+starter={`# 方法1：直接建立
+matrix = [
+    [1, 2, 3],
+    [4, 5, 6], 
+    [7, 8, 9]
+]
+
+print("矩陣:")
+for row in matrix:
+    print(row)
+
+print()
+
+# 方法2：用迴圈建立
+rows, cols = 3, 4
+matrix2 = []
+for i in range(rows):
+    row = []
+    for j in range(cols):
+        row.append(i * cols + j + 1)
+    matrix2.append(row)
+
+print("3x4 矩陣:")
+for row in matrix2:
+    print(row)`}
+enableAiReview
+/>
+
+---
+
+## 2. 存取元素
+
+用 `[行][列]` 的方式存取：
+
+<TryIt
+id="access-2d-elements"
+starter={`# 學生成績表：3個學生，4門科目
+grades = [
+    [85, 92, 78, 88],  # Alice 的成績
+    [91, 87, 94, 82],  # Bob 的成績  
+    [76, 89, 85, 93]   # Carol 的成績
+]
+
+students = ["Alice", "Bob", "Carol"]
+subjects = ["數學", "英文", "物理", "化學"]
+
+print("存取特定成績:")
+print(f"{students[0]} 的數學成績: {grades[0][0]}")
+print(f"{students[1]} 的物理成績: {grades[1][2]}")
+print(f"{students[2]} 的化學成績: {grades[2][3]}")
+
+# 修改成績
+grades[0][1] = 95  # Alice 的英文改成 95
+print(f"\n修改後 {students[0]} 的英文成績: {grades[0][1]}")`}
+enableAiReview
+/>
+
+---
+
+## 3. 遍歷二維串列
+
+用巢狀迴圈處理每個元素：
+
+<TryIt
+id="iterate-2d-arrays"
+starter={`grades = [
+    [85, 92, 78, 88],
+    [91, 87, 94, 82], 
+    [76, 89, 85, 93]
+]
+
+students = ["Alice", "Bob", "Carol"]
+subjects = ["數學", "英文", "物理", "化學"]
+
+print("完整成績表:")
+print(f"{'學生':<8}", end="")
+for subject in subjects:
+    print(f"{subject:<6}", end="")
+print()
+
+# 用索引遍歷
+for i in range(len(grades)):
+    print(f"{students[i]:<8}", end="")
+    for j in range(len(grades[i])):
+        print(f"{grades[i][j]:<6}", end="")
+    print()
+
+print("\n用 enumerate 遍歷:")
+for i, student_grades in enumerate(grades):
+    print(f"{students[i]}: ", end="")
+    for grade in student_grades:
+        print(f"{grade} ", end="")
+    print()`}
+enableAiReview
+/>
+
+---
+
+## 4. 行列操作
+
+對整行或整列進行操作：
+
+<TryIt
+id="row-column-operations"
+starter={`grades = [
+    [85, 92, 78, 88],
+    [91, 87, 94, 82], 
+    [76, 89, 85, 93]
+]
+
+students = ["Alice", "Bob", "Carol"]
+subjects = ["數學", "英文", "物理", "化學"]
+
+# 計算每個學生的平均分數（行操作）
+print("各學生平均分數:")
+for i, student_grades in enumerate(grades):
+    average = sum(student_grades) / len(student_grades)
+    print(f"{students[i]}: {average:.1f}")
+
+print()
+
+# 計算每科的平均分數（列操作）
+print("各科平均分數:")
+for j in range(len(subjects)):
+    total = 0
+    for i in range(len(grades)):
+        total += grades[i][j]
+    average = total / len(grades)
+    print(f"{subjects[j]}: {average:.1f}")`}
+enableAiReview
+/>
+
+---
+
+## 5. 矩陣運算
+
+基本的矩陣數學運算：
+
+<TryIt
+id="matrix-operations"
+starter={`# 矩陣加法
+def add_matrices(matrix1, matrix2):
+    result = []
+    for i in range(len(matrix1)):
+        row = []
+        for j in range(len(matrix1[0])):
+            row.append(matrix1[i][j] + matrix2[i][j])
+        result.append(row)
+    return result
+
+# 矩陣轉置
+def transpose(matrix):
+    result = []
+    for j in range(len(matrix[0])):  # 原來的列數變成行數
+        row = []
+        for i in range(len(matrix)):  # 原來的行數變成列數
+            row.append(matrix[i][j])
+        result.append(row)
+    return result
+
+# 測試
+A = [[1, 2], [3, 4]]
+B = [[5, 6], [7, 8]]
+
+print("矩陣 A:")
+for row in A:
+    print(row)
+
+print("\n矩陣 B:")
+for row in B:
+    print(row)
+
+print("\nA + B:")
+result = add_matrices(A, B)
+for row in result:
+    print(row)
+
+print("\nA 的轉置:")
+AT = transpose(A)
+for row in AT:
+    print(row)`}
+enableAiReview
+/>
+
+---
+
+## 6. 搜尋與統計
+
+在二維串列中搜尋和統計：
+
+<TryIt
+id="search-and-stats"
+starter={`# 座位表（0=空位, 1=已占用）
+seats = [
+    [1, 0, 1, 0, 1],
+    [1, 1, 0, 0, 1],
+    [0, 1, 1, 1, 0],
+    [1, 0, 0, 1, 1]
+]
+
+def count_empty_seats(seats):
+    count = 0
+    for row in seats:
+        for seat in row:
+            if seat == 0:
+                count += 1
+    return count
+
+def find_empty_seats(seats):
+    empty_positions = []
+    for i in range(len(seats)):
+        for j in range(len(seats[i])):
+            if seats[i][j] == 0:
+                empty_positions.append((i, j))
+    return empty_positions
+
+print("座位表 (1=已占用, 0=空位):")
+for i, row in enumerate(seats):
+    print(f"第{i+1}行: {row}")
+
+print(f"\n空位總數: {count_empty_seats(seats)}")
+print(f"空位位置: {find_empty_seats(seats)}")
+
+# 找連續空位
+def find_consecutive_seats(seats, needed):
+    for i in range(len(seats)):
+        consecutive = 0
+        for j in range(len(seats[i])):
+            if seats[i][j] == 0:
+                consecutive += 1
+                if consecutive >= needed:
+                    start_pos = j - needed + 1
+                    return (i, start_pos, needed)
+            else:
+                consecutive = 0
+    return None
+
+result = find_consecutive_seats(seats, 2)
+if result:
+    row, start, count = result
+    print(f"找到 {count} 個連續空位：第{row+1}行，座位 {start+1}-{start+count}")
+else:
+    print("沒有找到2個連續空位")`}
+enableAiReview
+/>
+
+---
+
+## 7. 實用的二維串列應用
+
+<TryIt
+id="practical-applications"
+starter={`# 井字遊戲盤面
+def create_tic_tac_toe():
+    return [[' ' for _ in range(3)] for _ in range(3)]
+
+def print_board(board):
+    print("  0 1 2")
+    for i in range(3):
+        print(f"{i} {' '.join(board[i])}")
+        if i < 2:
+            print("  -----")
+
+def check_winner(board):
+    # 檢查行
+    for row in board:
+        if row[0] == row[1] == row[2] != ' ':
+            return row[0]
+    
+    # 檢查列
+    for j in range(3):
+        if board[0][j] == board[1][j] == board[2][j] != ' ':
+            return board[0][j]
+    
+    # 檢查對角線
+    if board[0][0] == board[1][1] == board[2][2] != ' ':
+        return board[0][0]
+    if board[0][2] == board[1][1] == board[2][0] != ' ':
+        return board[0][2]
+    
+    return None
+
+# 測試遊戲
+game_board = create_tic_tac_toe()
+game_board[0][0] = 'X'
+game_board[0][1] = 'O'  
+game_board[1][1] = 'X'
+game_board[2][2] = 'X'
+
+print("井字遊戲盤面:")
+print_board(game_board)
+
+winner = check_winner(game_board)
+if winner:
+    print(f"\n獲勝者: {winner}")
+else:
+    print("\n遊戲繼續")`}
+enableAiReview
+/>
+
+---
+
+## 常見陷阱
+
+<Pitfalls items={[
+{
+"symptom": "所有行都指向同一個串列物件",
+"why": "用 [[0] * cols] * rows 建立時，所有行共享同一個串列",
+"fix": "用串列推導式：[[0 for _ in range(cols)] for _ in range(rows)]"
+},
+{
+"symptom": "IndexError: list index out of range",
+"why": "存取了不存在的行或列索引",
+"fix": "檢查索引範圍：0 <= i < len(matrix) 和 0 <= j < len(matrix[0])"
+},
+{
+"symptom": "不同行有不同的列數",
+"why": "建立不規則的二維串列（鋸齒陣列）",
+"fix": "確保每行有相同數量的元素，或在存取前檢查長度"
+}
+]} />
+
+## Boss 挑戰
+
+<Boss
+  title="圖書館座位管理系統"
+  description="建立一個圖書館座位管理系統：
+
+1. 建立 4x6 的座位表（4行6列）
+2. 實作功能：
+   - 顯示座位狀況（O=空位，X=已占用）
+   - 預約座位（輸入行列，標記為已占用）
+   - 釋放座位（標記為空位）
+   - 統計空位數量
+   - 找出最佳區域（連續空位最多的行）
+
+輸出格式：
+座位狀況:
+  1 2 3 4 5 6
+1 O X O O X O
+2 X O O X O O
+3 O O O O O X
+4 X O X O O O
+
+空位總數: XX
+最佳行: 第X行 (連續空位X個)"
+  testCases={[
+    {
+      inputs: ["預約", "0", "1", "顯示"],
+      outputs: ["預約成功", "座位狀況:", "  1 2 3 4 5 6", "1 O X O O O O", "2 O O O O O O", "3 O O O O O O", "4 O O O O O O", "空位總數: 23", "最佳行: 第2行 (連續空位6個)"]
+    },
+    {
+      inputs: ["釋放", "0", "1", "顯示"],
+      outputs: ["釋放成功", "座位狀況:", "  1 2 3 4 5 6", "1 O O O O O O", "2 O O O O O O", "3 O O O O O O", "4 O O O O O O", "空位總數: 24", "最佳行: 第1行 (連續空位6個)"]
+    }
+  ]}
+/>

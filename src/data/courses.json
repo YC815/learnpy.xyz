@@ -1,0 +1,180 @@
+{
+  "courses": [
+    {
+      "id": 1,
+      "title": "輸入、輸出與數字",
+      "description": "學習如何與程式互動，處理數字運算",
+      "level": "初級",
+      "exercises": 5,
+      "articles": [
+        {
+          "title": "Python 資料型別與輸出：讓電腦開口說話",
+          "slug": "python-data-types-and-print",
+          "path": "course-1/python-data-types-and-print.mdx",
+          "hasBoss": true,
+          "practiceCount": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "整數與浮點數",
+      "description": "深入了解不同數字類型的特性與用法",
+      "level": "初級",
+      "exercises": 4,
+      "articles": [
+        {
+          "title": "整數與浮點數：數字的精準與彈性",
+          "slug": "integers-and-floats",
+          "path": "course-2/integers-and-floats.mdx",
+          "hasBoss": true,
+          "practiceCount": 6
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "條件判斷：if、then、else",
+      "description": "讓程式能夠根據條件做出不同的決定",
+      "level": "初級",
+      "exercises": 6,
+      "articles": [
+        {
+          "title": "條件判斷：if、then、else - 讓程式學會思考",
+          "slug": "if-then-else",
+          "path": "course-3/if-then-else.mdx",
+          "hasBoss": true,
+          "practiceCount": 7
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "For 迴圈與範圍",
+      "description": "學習如何重複執行程式碼指定次數",
+      "level": "初級",
+      "exercises": 7,
+      "articles": [
+        {
+          "title": "For 迴圈與範圍：重複執行的藝術",
+          "slug": "for-loops-and-range",
+          "path": "course-4/for-loops-and-range.mdx",
+          "hasBoss": true,
+          "practiceCount": 8
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "字串處理",
+      "description": "掌握文字資料的處理與操作技巧",
+      "level": "初級",
+      "exercises": 8,
+      "articles": [
+        {
+          "title": "字串處理：文字魔法師的必備技能",
+          "slug": "string-processing",
+          "path": "course-5/string-processing.mdx",
+          "hasBoss": true,
+          "practiceCount": 8
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "While 迴圈",
+      "description": "學習條件式重複執行程式碼",
+      "level": "初中級",
+      "exercises": 6,
+      "articles": [
+        {
+          "title": "While 迴圈：當條件成立時繼續執行",
+          "slug": "while-loops",
+          "path": "course-6/while-loops.mdx",
+          "hasBoss": true,
+          "practiceCount": 7
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "串列 (Lists)",
+      "description": "學習如何儲存和操作多個資料項目",
+      "level": "中級",
+      "exercises": 9,
+      "articles": [
+        {
+          "title": "串列 (Lists)：收納多個資料的容器",
+          "slug": "lists",
+          "path": "course-7/lists.mdx",
+          "hasBoss": true,
+          "practiceCount": 9
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "函數與遞迴",
+      "description": "將程式碼組織成可重複使用的函數",
+      "level": "中級",
+      "exercises": 10,
+      "articles": [
+        {
+          "title": "函數與遞迴：程式的樂高積木",
+          "slug": "functions-and-recursion",
+          "path": "course-8/functions-and-recursion.mdx",
+          "hasBoss": true,
+          "practiceCount": 8
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "二維串列 (陣列)",
+      "description": "處理表格狀的資料結構",
+      "level": "中高級",
+      "exercises": 8,
+      "articles": [
+        {
+          "title": "二維串列 (陣列)：表格資料的處理",
+          "slug": "2d-arrays",
+          "path": "course-9/2d-arrays.mdx",
+          "hasBoss": true,
+          "practiceCount": 7
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "集合 (Sets)",
+      "description": "學習處理不重複資料的集合",
+      "level": "中級",
+      "exercises": 6,
+      "articles": [
+        {
+          "title": "集合 (Sets)：不重複資料的管理",
+          "slug": "sets",
+          "path": "course-10/sets.mdx",
+          "hasBoss": true,
+          "practiceCount": 7
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "字典 (Dictionaries)",
+      "description": "掌握鍵值對應的資料結構",
+      "level": "中級",
+      "exercises": 9,
+      "articles": [
+        {
+          "title": "字典 (Dictionaries)：鍵值對應的資料結構",
+          "slug": "dictionaries",
+          "path": "course-11/dictionaries.mdx",
+          "hasBoss": true,
+          "practiceCount": 8
+        }
+      ]
+    }
+  ]
+}
