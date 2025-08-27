@@ -169,10 +169,40 @@ builtins.input = custom_input
     });
   }
 
+  // 檢測程式碼中是否包含 while 迴圈
+  private detectWhileLoop(code: string): boolean {
+    // 移除字串和註解中的 while，只檢測實際的程式碼
+    let cleanCode = code;
+    
+    // 移除單行註解
+    cleanCode = cleanCode.replace(/#.*$/gm, '');
+    
+    // 移除多行字串（三引號）
+    cleanCode = cleanCode.replace(/"""[\s\S]*?"""/g, '');
+    cleanCode = cleanCode.replace(/'''[\s\S]*?'''/g, '');
+    
+    // 移除單行字串
+    cleanCode = cleanCode.replace(/"[^"]*"/g, '');
+    cleanCode = cleanCode.replace(/'[^']*'/g, '');
+    
+    // 檢查是否包含 while 關鍵字（作為獨立的詞）
+    return /\bwhile\b/.test(cleanCode);
+  }
+
   public async execute(code: string, userInputs: string[] = []): Promise<PyodideExecutionResult> {
     const startTime = Date.now();
     
     try {
+      // 檢查程式碼中是否包含 while 迴圈
+      if (this.detectWhileLoop(code)) {
+        const executionTime = Date.now() - startTime;
+        return {
+          success: false,
+          error: 'WhileLoopNotSupported: 為了避免瀏覽器崩潰，此環境不支援 while 迴圈。請使用 for 迴圈配合 range() 函數來實現相同功能。',
+          executionTime
+        };
+      }
+      
       const pyodide = await this.initialize();
       
       // 清空緩衝區

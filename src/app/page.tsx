@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
+import { AuthButtons, UserMenuButton } from '@/components';
 
 const TryIt: React.FC = () => {
   const [code, setCode] = useState('name = input("你的名字？ ")\nprint(f"Hello, {name}!")');
@@ -62,6 +64,7 @@ print(f"Hello, {name}!")`}
 
 export default function Home() {
   const router = useRouter();
+  const { user, isLoaded } = useUser();
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -83,36 +86,33 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-stone-900">
-      {/* Navigation Button */}
-      <div className="fixed top-6 right-6 z-50">
-        <button 
-          onClick={navigateToCourses}
-          onMouseMove={handleMouseMove}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          className="group bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-        >
-          <i className="fa-solid fa-graduation-cap text-xl group-hover:rotate-12 transition-transform"></i>
-        </button>
-      </div>
+      {/* Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-stone-900/80 backdrop-blur-sm border-b border-stone-700/50">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          {/* Brand Logo */}
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-orange-400">LearnPy</h1>
+            <span className="text-stone-400">|</span>
+            <span className="text-stone-300 font-medium">Python 學習平台</span>
+          </div>
 
-      {/* Dynamic Tooltip */}
-      {showTooltip && (
-        <div 
-          className="fixed z-[100] pointer-events-none transition-opacity duration-200"
-          style={{
-            right: window.innerWidth - tooltipPosition.x,
-            top: tooltipPosition.y,
-          }}
-        >
-          <div className="bg-black/90 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-sm font-medium shadow-2xl border border-white/10">
-            進入學習頁面
+          {/* Auth Section */}
+          <div className="flex items-center gap-4">
+            {isLoaded && (
+              <>
+                {user ? (
+                  <UserMenuButton />
+                ) : (
+                  <AuthButtons />
+                )}
+              </>
+            )}
           </div>
         </div>
-      )}
+      </nav>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-stone-800 to-stone-900 min-h-screen flex items-center justify-center">
+      <section className="bg-gradient-to-br from-stone-800 to-stone-900 min-h-screen flex items-center justify-center pt-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-stone-100 mb-8 leading-tight">
             用對話和即時回饋<br/>學會真正能用的 Python
@@ -121,17 +121,31 @@ export default function Home() {
             AI 會在你犯錯時立刻指正，並解釋為什麼錯、怎麼改。
           </p>
           <div className="flex justify-center">
-            <button 
-              onClick={() => {
-                window.scrollTo({
-                  top: window.innerHeight,
-                  behavior: 'smooth'
-                });
-              }}
-              className="bg-orange-500 text-stone-100 px-8 py-5 rounded-xl text-2xl font-medium hover:bg-orange-600 transition-colors shadow-lg"
-            >
-              了解更多
-            </button>
+            {isLoaded && (
+              <>
+                {user ? (
+                  <button 
+                    onClick={navigateToCourses}
+                    className="bg-orange-500 text-stone-100 px-8 py-5 rounded-xl text-2xl font-medium hover:bg-orange-600 transition-colors shadow-lg flex items-center gap-3"
+                  >
+                    <i className="fa-solid fa-graduation-cap"></i>
+                    繼續學習
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => {
+                      window.scrollTo({
+                        top: window.innerHeight,
+                        behavior: 'smooth'
+                      });
+                    }}
+                    className="bg-orange-500 text-stone-100 px-8 py-5 rounded-xl text-2xl font-medium hover:bg-orange-600 transition-colors shadow-lg"
+                  >
+                    了解更多
+                  </button>
+                )}
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -249,16 +263,33 @@ export default function Home() {
           <p className="text-2xl text-orange-100 mb-8">
             馬上從第一課開始，邊聊邊學，邊錯邊進步。
           </p>
-          <button 
-            onClick={navigateToCourses}
-            className="group relative bg-gradient-to-r from-orange-500 to-red-500 text-white px-12 py-6 rounded-2xl text-2xl font-bold hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-xl border-2 border-orange-400 hover:border-orange-300"
-          >
-            <span className="flex items-center gap-3">
-              <i className="fa-solid fa-rocket group-hover:[animation:gentle-bounce_1s_ease-in-out_infinite]"></i>
-              開始我的 Python 之旅
-              <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-            </span>
-          </button>
+          {isLoaded && (
+            <>
+              {user ? (
+                <button 
+                  onClick={navigateToCourses}
+                  className="group relative bg-gradient-to-r from-orange-500 to-red-500 text-white px-12 py-6 rounded-2xl text-2xl font-bold hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-xl border-2 border-orange-400 hover:border-orange-300"
+                >
+                  <span className="flex items-center gap-3">
+                    <i className="fa-solid fa-graduation-cap group-hover:[animation:gentle-bounce_1s_ease-in-out_infinite]"></i>
+                    繼續我的 Python 之旅
+                    <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                  </span>
+                </button>
+              ) : (
+                <button 
+                  onClick={() => router.push('/sign-up')}
+                  className="group relative bg-gradient-to-r from-orange-500 to-red-500 text-white px-12 py-6 rounded-2xl text-2xl font-bold hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-xl border-2 border-orange-400 hover:border-orange-300"
+                >
+                  <span className="flex items-center gap-3">
+                    <i className="fa-solid fa-rocket group-hover:[animation:gentle-bounce_1s_ease-in-out_infinite]"></i>
+                    免費開始我的 Python 之旅
+                    <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                  </span>
+                </button>
+              )}
+            </>
+          )}
         </div>
       </section>
 

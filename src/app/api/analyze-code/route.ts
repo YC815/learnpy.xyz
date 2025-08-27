@@ -30,8 +30,65 @@ function generateFallbackResponse(code: string, error: string): AnalyzeResponse 
     lineNumber: number;
   }> = [];
 
-  // 處理真實 Python 錯誤訊息
-  if (error.includes('SyntaxError')) {
+  // 處理 while 迴圈禁用錯誤
+  if (error.includes('WhileLoopNotSupported')) {
+    suggestion = '此環境不支援 while 迴圈以避免無限迴圈造成瀏覽器崩潰。建議使用 for 迴圈配合 range() 函數！例如：「while i < 10」可以改寫為「for i in range(10)」。';
+    
+    // 嘗試將 while 轉換為 for 迴圈
+    const lines = code.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const whileMatch = line.match(/^(\s*)while\s+(.+):\s*$/);
+      
+      if (whileMatch) {
+        const indent = whileMatch[1];
+        const condition = whileMatch[2].trim();
+        
+        // 常見模式轉換
+        if (condition.match(/^\w+\s*<\s*(\d+)$/)) {
+          const match = condition.match(/(\w+)\s*<\s*(\d+)/);
+          if (match) {
+            const varName = match[1];
+            const maxNum = match[2];
+            const newLine = `${indent}for ${varName} in range(${maxNum}):`;
+            lines[i] = newLine;
+            modifiedCode = lines.join('\n');
+            changes.push({
+              type: 'add',
+              content: `將 while 迴圈改為 for 迴圈`,
+              lineNumber: i + 1
+            });
+            break;
+          }
+        } else if (condition.match(/^\w+\s*<=\s*(\d+)$/)) {
+          const match = condition.match(/(\w+)\s*<=\s*(\d+)/);
+          if (match) {
+            const varName = match[1];
+            const maxNum = parseInt(match[2]) + 1;
+            const newLine = `${indent}for ${varName} in range(${maxNum}):`;
+            lines[i] = newLine;
+            modifiedCode = lines.join('\n');
+            changes.push({
+              type: 'add',
+              content: `將 while 迴圈改為 for 迴圈`,
+              lineNumber: i + 1
+            });
+            break;
+          }
+        } else {
+          // 一般性建議
+          const newLine = `${indent}for i in range(10):  # 請調整範圍數字`;
+          lines[i] = newLine;
+          modifiedCode = lines.join('\n');
+          changes.push({
+            type: 'add',
+            content: `將 while 迴圈改為 for 迴圈`,
+            lineNumber: i + 1
+          });
+        }
+      }
+    }
+  } else if (error.includes('SyntaxError')) {
     if (error.includes('EOL while scanning string literal') || error.includes('unterminated string literal')) {
       suggestion = '你的字串引號沒有正確關閉哦！Python 需要每個字串都有配對的引號。請檢查程式碼中是否有遺漏的引號。';
       // 嘗試修正引號問題
@@ -132,13 +189,18 @@ ${code}
 錯誤訊息：
 ${error}
 
+重要限制：
+1. 此環境不支援 while 迴圈，請勿建議使用 while
+2. 如果錯誤與 while 相關，請建議使用 for 迴圈配合 range() 函數替代
+3. 例如：while i < 10 → for i in range(10)
+
 請以JSON格式回答，用2-3句友善的話解釋錯誤和解決方法：
 
 {
-  "suggestion": "用繁體中文簡短說明錯誤原因和如何修正",
+  "suggestion": "用繁體中文簡短說明錯誤原因和如何修正（避免建議while迴圈）",
   "diff": {
     "original": "${code.replace(/"/g, '\\"').replace(/\n/g, '\\n')}",
-    "modified": "修正後的程式碼",
+    "modified": "修正後的程式碼（使用for迴圈替代while）",
     "changes": [{"type": "add", "content": "修正說明", "lineNumber": 1}]
   }
 }`;

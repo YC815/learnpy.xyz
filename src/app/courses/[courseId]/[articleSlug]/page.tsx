@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import coursesData from '@/data/courses.json';
 import { MDXRenderer } from '@/components/MDXRenderer';
+import CourseProgressBar from '@/components/CourseProgressBar';
+import { ClientNavigation } from './ClientNavigation';
 
 interface ArticlePageProps {
   params: Promise<{
@@ -42,10 +44,42 @@ async function getArticleContent(courseId: string, articleSlug: string) {
     const filePath = path.join(process.cwd(), 'src', 'content', article.path);
     const content = fs.readFileSync(filePath, 'utf-8');
     
+    // 計算整個課程的實際練習數量
+    const courseDir = path.join(process.cwd(), 'src', 'content', `course-${courseId}`);
+    let totalExercises = 0;
+    let bossExercises = 0;
+    
+    try {
+      if (fs.existsSync(courseDir)) {
+        const files = fs.readdirSync(courseDir).filter(file => file.endsWith('.mdx'));
+        
+        files.forEach(file => {
+          const mdxFilePath = path.join(courseDir, file);
+          const mdxContent = fs.readFileSync(mdxFilePath, 'utf-8');
+          
+          // 計算 TryIt 組件數量
+          const tryItMatches = mdxContent.match(/<TryIt[\s\S]*?\/>/g);
+          if (tryItMatches) {
+            totalExercises += tryItMatches.length;
+          }
+          
+          // 計算 Boss 組件數量
+          const bossMatches = mdxContent.match(/<Boss[\s\S]*?\/>/g);
+          if (bossMatches) {
+            bossExercises += bossMatches.length;
+          }
+        });
+      }
+    } catch (error) {
+      console.warn(`無法讀取課程 ${courseId} 的內容:`, error);
+    }
+    
     return {
       course,
       article,
-      content
+      content,
+      actualExercises: totalExercises,
+      bossExercises: bossExercises
     };
   } catch (error) {
     console.error('無法讀取文章:', error);
@@ -61,22 +95,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
   
-  const { course, article, content } = articleData;
+  const { course, article, content, actualExercises, bossExercises } = articleData;
   
   return (
     <div className="min-h-screen bg-stone-900">
-      {/* Navigation */}
-      <div className="fixed top-6 left-6 z-50 flex items-center gap-4">
-        <Link href="/courses">
-          <button className="group bg-stone-700 hover:bg-stone-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110">
-            <i className="fa-solid fa-arrow-left text-xl group-hover:-translate-x-1 transition-transform"></i>
-          </button>
-        </Link>
-        <div className="text-stone-100">
-          <div className="text-sm text-stone-400">課程 {course.id}</div>
-          <div className="text-lg font-medium">{course.title}</div>
-        </div>
-      </div>
+      {/* Client Navigation */}
+      <ClientNavigation courseId={courseId} courseTitle={course.title} />
       
       {/* Article Header */}
       <section className="py-16 pt-32 bg-stone-800">
@@ -95,6 +119,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 </h1>
               </div>
             </div>
+            
+            {/* Course Progress Bar */}
+            <CourseProgressBar
+              courseId={parseInt(courseId)}
+              articleSlug={articleSlug}
+              totalTryItCount={actualExercises || 0}
+              hasBossChallenge={bossExercises > 0}
+            />
           </div>
         </div>
       </section>
@@ -103,7 +135,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <section className="py-16 bg-stone-900">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-stone-800/50 rounded-3xl p-8 border border-stone-600/30">
-            <MDXRenderer source={content} />
+            <MDXRenderer 
+              source={content}
+              courseId={parseInt(courseId)}
+              articleSlug={articleSlug}
+            />
           </div>
           
           {/* Navigation Buttons */}

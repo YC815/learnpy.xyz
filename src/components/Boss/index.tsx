@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { CodeEditor } from '../TryIt/CodeEditor';
 import { PythonExecutor } from '../TryIt/PythonExecutor';
 import { PythonError, ExecutionResult } from '../TryIt/types';
@@ -14,6 +15,9 @@ interface BossProps {
   title: string;
   description: string;
   testCases: TestCase[];
+  // 資料庫整合相關
+  courseId?: number;
+  articleSlug?: string;
 }
 
 interface TestResult {
@@ -24,7 +28,8 @@ interface TestResult {
   error?: string;
 }
 
-export const Boss: React.FC<BossProps> = ({ title, description, testCases }) => {
+export const Boss: React.FC<BossProps> = ({ title, description, testCases, courseId, articleSlug }) => {
+  const { user, isLoaded } = useUser();
   const [code, setCode] = useState('# 在這裡實作你的解決方案\n');
   const [errors, setErrors] = useState<PythonError[]>([]);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
@@ -33,6 +38,16 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases }) => 
   const [executionResult, setExecutionResult] = useState<ExecutionResult | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
   const testCaseRefs = useRef<(HTMLDivElement | null)[]>([]);
+  
+  // 拖拽調整佈局的狀態
+  const [leftWidth, setLeftWidth] = useState(70); // 預設 70% (7:3 比例)
+  const [isDragging, setIsDragging] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // 檢查是否在客戶端
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleCodeChange = (newCode: string) => {
     setCode(newCode);
@@ -42,9 +57,107 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases }) => 
     setErrors(newErrors);
   };
 
+  // 處理拖拽開始  
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  // 處理拖拽移動
+  const handleMouseMove = React.useCallback((e: MouseEvent) => {
+    if (!isDragging) return;
+    
+    const container = document.querySelector('.boss-container');
+    if (!container) return;
+    
+    const containerRect = container.getBoundingClientRect();
+    const relativeX = e.clientX - containerRect.left;
+    const containerWidth = containerRect.width;
+    const newLeftWidth = (relativeX / containerWidth) * 100;
+    
+    // 限制範圍在 30% - 80% 之間
+    const clampedWidth = Math.max(30, Math.min(80, newLeftWidth));
+    setLeftWidth(clampedWidth);
+  }, [isDragging]);
+
+  // 處理拖拽結束
+  const handleMouseUp = React.useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // 添加全局事件監聽器
+  React.useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    } else {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
   const handleExecute = async (result: ExecutionResult) => {
     setExecutionResult(result);
     setIsExecuting(false);
+  };
+
+  // 保存 Boss 程式碼提交和測試結果到資料庫
+  const saveBossSubmission = async (code: string, testResults: TestResult[]) => {
+    if (!user || !isLoaded || !courseId || !articleSlug) {
+      return; // 如果沒有用戶認證或缺少必要資訊，不保存
+    }
+
+    const allPassed = testResults.every(result => result.passed);
+    
+    try {
+      const bossTestResults = testResults.map((result, index) => ({
+        testCaseIndex: index,
+        passed: result.passed,
+        expectedOutput: result.expectedOutput.join('\n'),
+        actualOutput: result.actualOutput,
+        errorMessage: result.error || null,
+      }));
+
+      const response = await fetch('/api/submissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          courseId: courseId,
+          articleSlug: articleSlug,
+          componentType: 'boss',
+          componentId: 'boss-challenge',
+          code: code,
+          isSuccessful: allPassed,
+          bossTestResults: bossTestResults,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save boss submission:', await response.text());
+      } else {
+        const result = await response.json();
+        console.log('Boss submission saved:', result);
+        
+        if (allPassed) {
+          console.log('🎉 All tests passed! Boss challenge completed!');
+        }
+      }
+    } catch (error) {
+      console.error('Error saving boss submission:', error);
+    }
   };
 
   const runAllTests = async () => {
@@ -100,6 +213,9 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases }) => 
 
     setTestResults(results);
     setIsRunningTests(false);
+    
+    // 保存 Boss 提交結果到資料庫
+    await saveBossSubmission(code, results);
   };
 
   const scrollToTestCase = (index: number) => {
@@ -118,7 +234,11 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases }) => 
   };
 
   return (
-    <div className="my-8 bg-gradient-to-r from-slate-800/80 to-slate-700/80 border-2 border-amber-500/30 rounded-xl overflow-hidden shadow-xl backdrop-blur-sm">
+    <div 
+      id="boss-challenge"
+      className="my-8 bg-gradient-to-r from-slate-800/80 to-slate-700/80 border-2 border-amber-500/30 rounded-xl overflow-hidden shadow-xl backdrop-blur-sm boss-container"
+      style={{ scrollMarginTop: '100px' }}
+    >
       {/* Header */}
       <div className="bg-gradient-to-r from-amber-600/20 to-yellow-600/20 border-b border-amber-500/20 p-6">
         <div className="flex items-center gap-4">
@@ -198,10 +318,15 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases }) => 
               </div>
             </div>
 
-            {/* Main Content - Three Column Layout */}
-            <div className="flex h-96">
-              {/* Left: Code Editor */}
-              <div className="flex-1 border-r border-slate-600/40 relative">
+            {/* Main Content - Responsive Height Layout */}
+            <div className="flex flex-col md:flex-row h-[500px] md:h-[550px] lg:h-[600px]">
+              {/* Code Editor - Resizable width on desktop */}
+              <div 
+                className="flex-1 md:border-r border-slate-600/40 relative" 
+                style={{ 
+                  width: isClient && window.innerWidth >= 768 ? `${leftWidth}%` : '100%' 
+                }}
+              >
                 <div className="h-full">
                   <CodeEditor
                     value={code}
@@ -211,8 +336,23 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases }) => 
                 </div>
               </div>
 
-              {/* Right: Input/Output Panels */}
-              <div className="w-80 flex flex-col">
+              {/* Resizable Divider - Only visible on desktop */}
+              <div 
+                className="hidden md:block w-1 bg-slate-600/40 cursor-col-resize hover:bg-slate-500 transition-colors relative group"
+                onMouseDown={handleMouseDown}
+              >
+                <div className="absolute inset-y-0 -left-1 -right-1 flex items-center justify-center group-hover:bg-slate-500/20">
+                  <div className="w-0.5 h-8 bg-slate-400 opacity-60"></div>
+                </div>
+              </div>
+
+              {/* Input/Output Panels - Resizable width on desktop */}
+              <div 
+                className="w-full flex flex-col" 
+                style={{ 
+                  width: isClient && window.innerWidth >= 768 ? `${100 - leftWidth}%` : '100%' 
+                }}
+              >
                 {/* Top: Input Panel */}
                 <div className="flex-1 border-b border-slate-600/40">
                   <div className="p-3 bg-slate-700/40 border-b border-slate-600/40">
@@ -226,7 +366,7 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases }) => 
                       value={userInput}
                       onChange={(e) => setUserInput(e.target.value)}
                       placeholder="在這裡輸入程式需要的資料&#10;每行代表一個輸入值"
-                      className="w-full h-32 p-2 text-sm text-stone-200 bg-slate-900/60 border border-slate-600/40 rounded resize-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder-stone-500"
+                      className="w-full h-24 md:h-32 lg:h-36 p-2 text-sm text-stone-200 bg-slate-900/60 border border-slate-600/40 rounded resize-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder-stone-500"
                     />
                   </div>
                 </div>

@@ -2,6 +2,10 @@ export interface TryItProps {
   id: string;
   starter: string;
   enableAiReview?: boolean;
+  // 資料庫整合相關
+  courseId?: number;
+  articleSlug?: string;
+  index?: number; // 在文章中的順序索引
 }
 
 export interface PythonError {
