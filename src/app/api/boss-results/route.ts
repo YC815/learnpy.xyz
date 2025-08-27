@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
 // POST: 創建 Boss 測試結果 (通常通過 submissions API 處理，但也可以單獨使用)
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
