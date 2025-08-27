@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^2.1.1",
+    "@clerk/localizations": "^3.23.0",
+    "@clerk/nextjs": "^6.31.4",
     "@google/generative-ai": "^0.24.1",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
