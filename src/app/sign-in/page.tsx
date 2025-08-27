@@ -21,7 +21,6 @@ export default function SignInPage() {
         <div className="w-full">
           <SignIn 
             appearance={{
-              baseTheme: "dark",
               elements: {
                 rootBox: "w-full mx-auto",
                 card: "bg-stone-800 border border-stone-600 shadow-2xl rounded-2xl",

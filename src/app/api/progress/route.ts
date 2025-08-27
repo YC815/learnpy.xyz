@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 // POST: 更新用戶學習進度
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

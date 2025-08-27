@@ -181,7 +181,7 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases, cours
         const result = await pyodideRunner.execute(code, testCase.inputs);
         
         if (result.success) {
-          const actualOutput = result.output.trim();
+          const actualOutput = (result.output || '').trim();
           const expectedOutput = testCase.outputs.join('\n').trim();
           const passed = actualOutput === expectedOutput;
           
@@ -444,7 +444,7 @@ export const Boss: React.FC<BossProps> = ({ title, description, testCases, cours
             {testCases.map((testCase, index) => (
               <div 
                 key={index} 
-                ref={(el) => testCaseRefs.current[index] = el}
+                ref={(el) => { testCaseRefs.current[index] = el; }}
                 className="bg-slate-800/60 rounded-lg border border-slate-600/40 overflow-hidden transition-all duration-300"
               >
                 <div className="bg-slate-700/60 px-4 py-3 border-b border-slate-600/40">
